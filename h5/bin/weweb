@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 var promisify = require('promisify-node')
 var childProcess = require('child_process')
 var exec = childProcess.exec
@@ -83,20 +84,26 @@ var rootPath = path.resolve(__dirname, '../tmp')
 var distPath = path.resolve(curPath, program.dist || './dist')
 
 let step = 0
+
 function doTransformFile () {
   let commonDir = distPath + '/framework'
 
   if (program.build) {
     fs
       .copy(rootPath + '/public', commonDir)
-      .then(() => exec(`cd ${commonDir} && zip -r -q ${commonDir}.zip ./*`))
       .then(() => {
-        console.log('文件已生成到: ' + distPath)
+        cmder =
+          'cd ' + commonDir + ' && zip -r -q ' + commonDir + '.zip' + ' ./*'
+        // console.log(cmder)
+        exec(cmder)
+      })
+      .then(() => {
+        console.log('文件已生成到1: ' + distPath)
       })
       .catch(e => console.log(e))
   } else {
     var core = require('../lib/core')
-    if(!program.unzip)distPath = distPath + '/app'
+    if (!program.unzip) distPath = distPath + '/app'
 
     core
       .getOtherFiles(folder, distPath)
@@ -105,9 +112,13 @@ function doTransformFile () {
       })
       .catch(e => console.log(e))
 
-    core.getService({ showLog: program.log || false }).then(function (content) {
-      util.createFile(distPath, 'service.html', content, zipFiles('构建入口'))
-    })
+    core
+      .getService({
+        showLog: program.log || false
+      })
+      .then(function (content) {
+        util.createFile(distPath, 'service.html', content, zipFiles('构建入口'))
+      })
 
     core.getServiceConfig(true).then(function (content) {
       util.createFile(
@@ -201,7 +212,9 @@ var zipFiles = (function () {
         // create a file to stream archive data to.
         var output = fs.createWriteStream(`${distPath}.zip`)
         var archive = archiver('zip', {
-          zlib: { level: 9 } // Sets the compression level.
+          zlib: {
+            level: 9
+          } // Sets the compression level.
         })
 
         output.on('close', function () {

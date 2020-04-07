@@ -56,13 +56,14 @@ module.exports = {
     path: getPath(DIST_PATH)
   },
   watch: watch,
+  devtool: isProd ? 'source-map' : 'inline-source-map',
   module: {
     loaders: [
       {
         test: /\.js$/,
         loader: 'babel-loader',
         exclude: /node_modules/,
-               query: {
+        query: {
           presets: ['env', 'stage-0'],
           babelrc: false
         }
@@ -77,7 +78,9 @@ module.exports = {
           fallback: 'style-loader',
           use: {
             loader: 'css-loader',
-            options: { minimize: isProd }
+            options: {
+              minimize: isProd
+            }
           }
         })
       },
