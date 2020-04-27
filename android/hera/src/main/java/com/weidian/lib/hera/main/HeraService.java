@@ -116,11 +116,14 @@ public class HeraService extends Service {
      */
     private static void initFramework(Context context) {
         SharedPreferences preferences = SharePreferencesUtil.getSharedPreference(context, "hera");
-        if (!StorageUtil.isFrameworkExists(context)
-                || preferences.getBoolean(AppConfig.getHostVersion(context), true)) {
-            FrameworkInitTask task = new FrameworkInitTask(context);
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        }
+//        if (!StorageUtil.isFrameworkExists(context)
+//                || preferences.getBoolean(AppConfig.getHostVersion(context), true)) {
+//
+//        }
+
+        FrameworkInitTask task = new FrameworkInitTask(context);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+
     }
 
     @Override
