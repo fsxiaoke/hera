@@ -250,6 +250,7 @@ const updateSubtree = function (ele, newNode, oldNode, willRemoveOldNode) {
   ele.__slots && (originalParentNode = ele.__slots[''])
 
   if (newNode) {
+    ;``
     parentNode = newNode.parentNode
     newNode.parentNode = ele
     newNode.__slotParent = originalParentNode
