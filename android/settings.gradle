@@ -1,2 +1,21 @@
 include ':sample'
 include ':hera'
+
+
+def modifyLibVersion(projectName,version) {
+    File settings = new File(gradle.FS_DIR + "/libconfig.cfg")
+    String content = FileUtil.getFileStr(settings)
+    String reg = "\"$projectName\":\\s*\".*?\\..*?\""
+    String mycode = "\"$projectName\":\"$version\""
+    println(reg + " " + mycode)
+    content = content.replaceAll(reg, mycode)
+    FileUtil.writeToFile(content.getBytes("utf-8"), settings)
+}
+
+gradle.ext.modifyLibVersion = this.&modifyLibVersion
+gradle.ext.mavenUrl = "http://maven.firstshare.cn/artifactory/libs-release-local"
+gradle.ext.mavenDevUrl = "http://maven.firstshare.cn/artifactory/libs-snapshot-local"
+gradle.ext.mavenUserName = "deployer"
+gradle.ext.mavenPwd = "fxiaoke"
+gradle.ext.FS_DIR="/users/tensix/Work/Gitlab/fs-android"
+gradle.ext.version = "0.0.1.2"
