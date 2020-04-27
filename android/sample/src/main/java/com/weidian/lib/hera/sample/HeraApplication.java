@@ -2,6 +2,7 @@ package com.weidian.lib.hera.sample;
 
 import android.app.Application;
 
+
 import com.tencent.smtt.sdk.QbSdk;
 import com.weidian.lib.hera.config.HeraConfig;
 import com.weidian.lib.hera.main.HeraService;

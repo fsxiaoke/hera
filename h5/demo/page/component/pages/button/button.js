@@ -32,6 +32,7 @@ for (var i = 0; i < types.length; ++i) {
       var changedData = {}
       changedData[key] = this.data[key] === 'default' ? 'mini' : 'default'
       this.setData(changedData)
+      console.log('setData')
     }
   })(types[i])
 }

@@ -15,8 +15,8 @@ html, body {
 }
 body {
   line-height: 1;
-  overflow-y: hidden;
-  overflow-x: hidden;
+  overflow-y: auto;
+  overflow-x: auto;
 }
 
 /* Make clicks pass-through */
