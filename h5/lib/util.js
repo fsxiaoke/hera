@@ -332,7 +332,9 @@ exports.mkdirs = function (dirpath) {
   let self = this
   if (!fs.existsSync(dirpath)) {
     self.mkdirs(path.dirname(dirpath))
-    fs.mkdirSync(dirpath)
+    try {
+      fs.mkdirSync(dirpath)
+    } catch (error) {}
   }
 }
 
