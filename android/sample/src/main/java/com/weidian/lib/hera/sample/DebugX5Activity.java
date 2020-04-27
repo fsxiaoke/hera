@@ -16,7 +16,7 @@ public class DebugX5Activity extends AppCompatActivity {
         setContentView(R.layout.debug_activity);
 
         WebView wv=(WebView) findViewById(R.id.web);
-        wv.loadUrl("http://debugx5.qq.com ");
+        wv.loadUrl("http://debugx5.qq.com");
     }
 
 }
