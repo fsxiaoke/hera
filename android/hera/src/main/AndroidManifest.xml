@@ -44,6 +44,7 @@
 
         <activity
             android:name="com.weidian.lib.hera.main.HeraActivity"
+            android:hardwareAccelerated="true"
             android:process=":hera"
             android:screenOrientation="portrait" />
         <activity
