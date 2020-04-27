@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+//    compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:design:27.1.1'
 
     compile "com.github.bumptech.glide:glide:3.7.0"
@@ -15,6 +15,8 @@ dependencies {
 
     compile 'com.facebook.stetho:stetho:1.5.0'
     compile 'com.facebook.stetho:stetho-okhttp3:1.5.0'
+
+    implementation 'com.tencent.tbs.tbssdk:sdk:43697'
 }
 
 android {
@@ -44,4 +46,45 @@ android {
     lintOptions {
         abortOnError false
     }
+}
+
+
+buildscript {
+    apply plugin: 'maven'
+    repositories {
+        mavenLocal()
+        maven {url 'http://maven.aliyun.com/nexus/content/groups/public/'}
+        mavenCentral()
+        jcenter()
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                repository(url: gradle.mavenUrl) {
+                    authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+                }
+
+                snapshotRepository(url: gradle.mavenDevUrl) {
+                    authentication(userName: gradle.mavenUserName, password: gradle.mavenPwd)
+                }
+            }
+        }
+
+
+        doFirst {
+//            def suffix_ver = 'git rev-parse HEAD'.execute().text.substring(0, 7)
+            def verName = gradle.version
+            println("upload $project.name ver $verName")
+            repositories.mavenDeployer.pom.version = "$verName"
+            repositories.mavenDeployer.pom.artifactId = "$project.name"
+            repositories.mavenDeployer.pom.groupId = "fs-android"
+//            repositories.mavenDeployer.pom.packaging = "aar"
+        }
+        doLast {
+            gradle.modifyLibVersion("$project.name",gradle.version)
+        }
+    }
+
+
 }
