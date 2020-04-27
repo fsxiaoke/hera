@@ -1,6 +1,8 @@
 package com.weidian.lib.hera.sample;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -23,6 +25,12 @@ public class SampleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 HeraService.launchHome(getApplicationContext(), userId, appId, appPath);
+            }
+        });
+        findViewById(R.id.enter_debug).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SampleActivity.this, DebugX5Activity.class));
             }
         });
     }
