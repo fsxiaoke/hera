@@ -2,6 +2,7 @@ package com.weidian.lib.hera.sample;
 
 import android.app.Application;
 
+import com.tencent.smtt.sdk.QbSdk;
 import com.weidian.lib.hera.config.HeraConfig;
 import com.weidian.lib.hera.main.HeraService;
 import com.weidian.lib.hera.sample.api.ApiOpenLink;
@@ -13,7 +14,7 @@ public class HeraApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
+        QbSdk.forceSysWebView();
         //在主进程中初始化框架配置，启动框架服务进程
         if (HeraTrace.isMainProcess(this)){
             HeraConfig config = new HeraConfig.Builder()
