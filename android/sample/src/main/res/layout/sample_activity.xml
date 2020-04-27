@@ -32,6 +32,16 @@
             android:text="@string/enter_hera"
             android:textColor="@color/colorPrimaryDark"
             android:textSize="20sp" />
+        <TextView
+            android:id="@+id/enter_debug"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawablePadding="10dp"
+            android:drawableTop="@drawable/ic_logo"
+            android:gravity="center"
+            android:text="打开调试"
+            android:textColor="@color/colorPrimaryDark"
+            android:textSize="20sp" />
     </LinearLayout>
 
 </LinearLayout>
