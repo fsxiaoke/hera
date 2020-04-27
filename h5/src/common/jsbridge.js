@@ -15,7 +15,7 @@
       defaultEventHandlers = {},
       eventPrefix = 'custom_event_',
       handlers = {},
-            PROTOCAL = 'hera',
+      PROTOCAL = 'hera',
       IFRAME_PREFIX = 'hybridjsbrige_'
     if (hasDocument) {
       var userAgent = global.navigator.userAgent,
@@ -148,16 +148,24 @@
         handlers[eventPrefix + eventName] = handler
       },
       subscribeHandler = function (eventName, data, webviewId, reportParams) {
-        // 执行注册的回调
-        var handler
-        // reportLog('subscribeHandler:'+eventName,data,[webviewId||''],'app2view_get');
-        ;(handler =
-          eventName.indexOf(eventPrefix) != -1
-            ? handlers[eventName]
-            : defaultEventHandlers[eventName]),
-          typeof handler === 'function' &&
-            handler(data, webviewId, reportParams)
+        sleep(0).then(() => {
+          // 执行注册的回调
+          var handler
+          // reportLog('subscribeHandler:'+eventName,data,[webviewId||''],'app2view_get');
+          ;(handler =
+            eventName.indexOf(eventPrefix) != -1
+              ? handlers[eventName]
+              : defaultEventHandlers[eventName]),
+            typeof handler === 'function' &&
+              handler(data, webviewId, reportParams)
+        })
+      },
+      sleep = function (t) {
+        return new Promise(resolve => {
+          setTimeout(resolve, t)
+        })
       }
+
     global.HeraJSBridge = {
       invoke: invoke,
       invokeCallbackHandler: invokeCallbackHandler,

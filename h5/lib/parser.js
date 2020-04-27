@@ -64,15 +64,20 @@ module.exports = function (full_path) {
             console.log(chalk.yellow('Using wcc.exe to transpile wxml:'))
             wxmlMsgFlag = 0
           }
-          execWcc({ maxBuffer: 1024 * 600 }, (err, stdout, stderr) => {
-            if (err) {
-              console.error(err.stack)
-              return reject(new Error(`${full_path} 编译失败，请检查`))
+          execWcc(
+            {
+              maxBuffer: 1024 * 600
+            },
+            (err, stdout, stderr) => {
+              if (err) {
+                console.error(err.stack)
+                return reject(new Error(`${full_path} 编译失败，请检查`))
+              }
+              // if (stderr) return reject(new Error(stderr))
+              cache[full_path] = stdout
+              resolve(stdout)
             }
-            // if (stderr) return reject(new Error(stderr))
-            cache[full_path] = stdout
-            resolve(stdout)
-          })
+          )
         } else {
           if (wxmlMsgFlag) {
             console.log(chalk.yellow('Using wxml-compiler to transpile wxml'))
@@ -102,16 +107,21 @@ module.exports = function (full_path) {
             console.log(chalk.yellow('Using wcsc.exe to build: '))
             wxssMsgFlag = 0
           }
-          execWcsc({ maxBuffer: 1024 * 600 }, (err, stdout, stderr) => {
-            if (err) {
-              console.error(err.stack)
-              return reject(new Error(`${full_path} 编译失败，请检查`))
+          execWcsc(
+            {
+              maxBuffer: 1024 * 600
+            },
+            (err, stdout, stderr) => {
+              if (err) {
+                console.error(err.stack)
+                return reject(new Error(`${full_path} 编译失败，请检查`))
+              }
+              wxssSourcemap(full_path, stdout).then(content => {
+                cache[full_path] = content
+                resolve(content)
+              }, reject)
             }
-            wxssSourcemap(full_path, stdout).then(content => {
-              cache[full_path] = content
-              resolve(content)
-            }, reject)
-          })
+          )
         } else {
           if (wxssMsgFlag) {
             console.log(
@@ -119,7 +129,9 @@ module.exports = function (full_path) {
             )
             wxssMsgFlag = 0
           }
-          wxssTranspile(srcs, { keepSlash: true }).then(stdout => {
+          wxssTranspile(srcs, {
+            keepSlash: true
+          }).then(stdout => {
             wxssSourcemap(full_path, stdout).then(content => {
               cache[full_path] = content
               resolve(content)
