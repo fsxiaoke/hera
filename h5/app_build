@@ -1,6 +1,7 @@
 #!/bin/bash
-echo "=> Building app: demo_fs"
-rm -rf ./dist/app/
-node ./bin/weweb demo
-cp -R "./dist/app.zip" "../ios/HeraDemo/demoapp.zip" 
+#编译demo_fs到android demo
+echo "=> build demo_fs"
+rm   -rf ./dist/app
+node ./bin/weweb demo_fs
+cp -R  "./dist/app.zip" "../ios/HeraDemo/demoapp.zip"  
 cp -R "./dist/app.zip" "../android/sample/src/main/assets/demoapp.zip" 

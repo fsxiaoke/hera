@@ -1,0 +1,6 @@
+#!/bin/bash
+#编译demo_fs到fs-android
+echo "=> Building app: demo_fs"
+rm -rf ./dist/app/
+node ./bin/weweb demo_fs
+cp -R  "./dist/app.zip" "/users/tensix/Work/Gitlab/fs-android/host/host_main/assets/demoapp.zip" 
