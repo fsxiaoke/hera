@@ -33,15 +33,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.facebook.stetho.Stetho;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.TbsListener;
-import com.tencent.smtt.sdk.WebView;
 import com.weidian.lib.hera.config.AppConfig;
 import com.weidian.lib.hera.config.HeraConfig;
 import com.weidian.lib.hera.trace.HeraTrace;
@@ -130,7 +127,7 @@ public class HeraService extends Service {
     public void onCreate() {
         super.onCreate();
         HeraTrace.d(TAG, "HeraProcessService onCreate");
-        Stetho.initializeWithDefaults(getApplicationContext());
+//        Stetho.initializeWithDefaults(getApplicationContext());
     }
 
     @Override

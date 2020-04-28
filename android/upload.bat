@@ -1,0 +1,1 @@
+gradlew hera:upload
