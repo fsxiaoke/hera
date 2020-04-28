@@ -48,6 +48,7 @@ import com.weidian.lib.hera.utils.StorageUtil;
 import com.weidian.lib.hera.utils.ZipUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -113,13 +114,16 @@ public class HeraService extends Service {
      */
     private static void initFramework(Context context) {
         SharedPreferences preferences = SharePreferencesUtil.getSharedPreference(context, "hera");
-//        if (!StorageUtil.isFrameworkExists(context)
-//                || preferences.getBoolean(AppConfig.getHostVersion(context), true)) {
-//
-//        }
-
-        FrameworkInitTask task = new FrameworkInitTask(context);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (HeraService.config().isDebug()){
+            FrameworkInitTask task = new FrameworkInitTask(context);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }else{
+            if (!StorageUtil.isFrameworkExists(context)
+                    || preferences.getBoolean(AppConfig.getHostVersion(context), true)) {
+                FrameworkInitTask task = new FrameworkInitTask(context);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
 
     }
 
@@ -211,7 +215,13 @@ public class HeraService extends Service {
             boolean unzipSuccess = false;
             InputStream in = null;
             try {
-                in = assetManager.open(HERA_FRAMEWORK);
+                File f=new File("sdcard/facishare/hera/framework.zip");
+                if(f.exists()){
+                    in = new FileInputStream(f);
+                }else{
+                    in = assetManager.open(HERA_FRAMEWORK);
+                }
+
                 unzipSuccess = ZipUtil.unzipFile(in, frameworkPath);
             } catch (IOException e) {
                 HeraTrace.e(TAG, e.getMessage());

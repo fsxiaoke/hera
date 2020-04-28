@@ -1,7 +1,9 @@
 #!/bin/bash
 #编译demo_fs到android demo
-echo "=> build demo_fs"
-rm   -rf ./dist/app
-node ./bin/weweb demo_fs
-cp -R  "./dist/app.zip" "../ios/HeraDemo/demoapp.zip"  
-cp -R "./dist/app.zip" "../android/sample/src/main/assets/demoapp.zip" 
+echo "=> build %1"
+rm   -rf ./dist/%1
+node ./bin/weweb %1 -d dist/%1
+cp -R  "./dist/%1.zip" "../ios/HeraDemo/%1.zip"  
+cp -R "./dist/%1.zip" "../android/sample/src/main/assets/%1.zip" 
+adb shell mkdir -p  "sdcard/facishare/hera"
+adb push "./dist/%1.zip" "sdcard/facishare/hera"
