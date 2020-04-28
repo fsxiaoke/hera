@@ -33,6 +33,12 @@ public class SampleActivity extends AppCompatActivity {
                 startActivity(new Intent(SampleActivity.this, DebugX5Activity.class));
             }
         });
+        findViewById(R.id.enter_debug2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SampleActivity.this, BrowserActivity.class));
+            }
+        });
     }
 
 }

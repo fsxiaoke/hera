@@ -15,7 +15,7 @@ public class HeraApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        QbSdk.forceSysWebView();
+//        QbSdk.forceSysWebView();
         //在主进程中初始化框架配置，启动框架服务进程
         if (HeraTrace.isMainProcess(this)){
             HeraConfig config = new HeraConfig.Builder()

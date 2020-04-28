@@ -141,9 +141,9 @@ public class HeraService extends Service {
             sConfig = new HeraConfig.Builder()
                     .setDebug(debug).build();
         }
-        if (config().isDebug() && Build.VERSION.SDK_INT >= 19) {
-            WebView.setWebContentsDebuggingEnabled(true);
-        }
+//        if (config().isDebug() && Build.VERSION.SDK_INT >= 19) {
+//            WebView.setWebContentsDebuggingEnabled(true);
+//        }
         return START_NOT_STICKY;
     }
 
