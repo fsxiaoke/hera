@@ -1,15 +1,14 @@
+import http from '../../../test/fsapi/http/index'
+
 Page({
   tapName: function (event) {
-    wx.openLink({
-      url: 'http://www.baidu.com',
-      success: function (res) {
-        wx.showToast({
-          title: res + 'sssss',
-          icon: 'success',
-          duration: 2000
-        })
+    var self = this
+    wx.getCookies({
+      success (res) {
+        self.setData({ text: res.cookies })
       }
     })
+    http.request({})
   },
   data: {
     text: 'This is page data.'
@@ -22,23 +21,9 @@ Page({
   },
   onReady: function () {
     var self = this
-    this.text = 'fffff'
-    wx.getSystemInfo({
+    wx.getRequestUrl({
       success (res) {
-        self.setData(
-          {
-            text: 'vvvvvv'
-          },
-          function () {
-            // this is setData callback
-          }
-        )
-
-        // wx.showToast({
-        //     title: res.system,
-        //     icon: 'success',
-        //     duration: 2000
-        //   })
+        self.setData({ text: res.url })
       }
     })
 

@@ -674,6 +674,12 @@ var apiObj = {
       }
     })
   },
+  getRequestUrl: function (params) {
+    bridge.invokeMethod('getRequestUrl', params)
+  },
+  getCookies: function (params) {
+    bridge.invokeMethod('getCookies', params)
+  },
   getSystemInfoSync: function (params) {
     var rt = {},
       platform = utils.getPlatform()
