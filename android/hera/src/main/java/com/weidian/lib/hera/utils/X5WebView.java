@@ -1,4 +1,4 @@
-package com.weidian.lib.hera.sample.utils;
+package com.weidian.lib.hera.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;

@@ -1,4 +1,4 @@
-package com.weidian.lib.hera.sample;
+package com.weidian.lib.hera.main;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -43,7 +43,8 @@ import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewCallbackClient;
 import com.tencent.smtt.sdk.WebViewClient;
 import com.tencent.smtt.utils.TbsLog;
-import com.weidian.lib.hera.sample.utils.X5WebView;
+import com.weidian.lib.hera.R;
+import com.weidian.lib.hera.utils.X5WebView;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -83,7 +84,10 @@ public class BrowserActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getWindow().setFormat(PixelFormat.TRANSLUCENT);
-
+		if (!HeraService.config().isDebug()){
+			finish();
+			return;
+		}
 		Intent intent = getIntent();
 		if (intent != null) {
 			try {

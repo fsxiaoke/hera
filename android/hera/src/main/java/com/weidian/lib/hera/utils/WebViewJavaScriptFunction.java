@@ -1,4 +1,4 @@
-package com.weidian.lib.hera.sample.utils;
+package com.weidian.lib.hera.utils;
 
 public interface WebViewJavaScriptFunction {
 

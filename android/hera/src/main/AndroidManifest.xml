@@ -52,7 +52,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:process=":hera"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name="com.weidian.lib.hera.main.BrowserActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:label="@string/app_name"></activity>
 
     </application>
 
