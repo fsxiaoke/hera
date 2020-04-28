@@ -2,11 +2,11 @@ package com.weidian.lib.hera.sample;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Debug;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.weidian.lib.hera.main.BrowserActivity;
 import com.weidian.lib.hera.main.HeraService;
 
 public class SampleActivity extends AppCompatActivity {
@@ -31,6 +31,12 @@ public class SampleActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SampleActivity.this, DebugX5Activity.class));
+            }
+        });
+        findViewById(R.id.enter_debug2).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SampleActivity.this, BrowserActivity.class));
             }
         });
     }
