@@ -1,4 +1,7 @@
-import http from '../../../test/fsapi/http/index'
+// import http from '../../../test/fsapi/http/index'
+import http from '../../lib/index'
+// var request = require('../../../test/fsapi/http/index.js').request
+// var request = require('../../lib/index.js').request
 
 Page({
   tapName: function (event) {

@@ -7,3 +7,4 @@ ios/Podfile.lock
 ios/Pods
 android/hera/.project
 android/sample/.project
+android/.project
