@@ -31,11 +31,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
 
+import com.weidian.lib.hera.main.HeraService;
 import com.weidian.lib.hera.trace.HeraTrace;
 import com.weidian.lib.hera.utils.StorageUtil;
 import com.weidian.lib.hera.utils.ZipUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -94,7 +96,13 @@ public class HeraAppManager {
             }
             if (!unzipResult) {
                 try {
-                    InputStream in = mContext.getAssets().open(appId + ".zip");
+                    InputStream in = null;
+                    File f=new File("sdcard/facishare/hera/"+appId+".zip");
+                    if(f.exists()&& HeraService.config().isDebug()){
+                        in = new FileInputStream(f);
+                    }else{
+                        in=mContext.getAssets().open(appId + ".zip");
+                    }
                     unzipResult = ZipUtil.unzipFile(in, outputPath);
                 } catch (IOException e) {
                     HeraTrace.e(TAG, e.getMessage());

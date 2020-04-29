@@ -33,15 +33,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
-import com.facebook.stetho.Stetho;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.TbsListener;
-import com.tencent.smtt.sdk.WebView;
 import com.weidian.lib.hera.config.AppConfig;
 import com.weidian.lib.hera.config.HeraConfig;
 import com.weidian.lib.hera.trace.HeraTrace;
@@ -51,6 +48,7 @@ import com.weidian.lib.hera.utils.StorageUtil;
 import com.weidian.lib.hera.utils.ZipUtil;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -116,13 +114,16 @@ public class HeraService extends Service {
      */
     private static void initFramework(Context context) {
         SharedPreferences preferences = SharePreferencesUtil.getSharedPreference(context, "hera");
-//        if (!StorageUtil.isFrameworkExists(context)
-//                || preferences.getBoolean(AppConfig.getHostVersion(context), true)) {
-//
-//        }
-
-        FrameworkInitTask task = new FrameworkInitTask(context);
-        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (HeraService.config().isDebug()){
+            FrameworkInitTask task = new FrameworkInitTask(context);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        }else{
+            if (!StorageUtil.isFrameworkExists(context)
+                    || preferences.getBoolean(AppConfig.getHostVersion(context), true)) {
+                FrameworkInitTask task = new FrameworkInitTask(context);
+                task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }
 
     }
 
@@ -130,7 +131,7 @@ public class HeraService extends Service {
     public void onCreate() {
         super.onCreate();
         HeraTrace.d(TAG, "HeraProcessService onCreate");
-        Stetho.initializeWithDefaults(getApplicationContext());
+//        Stetho.initializeWithDefaults(getApplicationContext());
     }
 
     @Override
@@ -214,7 +215,13 @@ public class HeraService extends Service {
             boolean unzipSuccess = false;
             InputStream in = null;
             try {
-                in = assetManager.open(HERA_FRAMEWORK);
+                File f=new File("sdcard/facishare/hera/framework.zip");
+                if(f.exists()){
+                    in = new FileInputStream(f);
+                }else{
+                    in = assetManager.open(HERA_FRAMEWORK);
+                }
+
                 unzipSuccess = ZipUtil.unzipFile(in, frameworkPath);
             } catch (IOException e) {
                 HeraTrace.e(TAG, e.getMessage());

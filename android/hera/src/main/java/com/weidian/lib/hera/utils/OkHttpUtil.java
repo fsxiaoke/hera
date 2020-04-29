@@ -31,8 +31,6 @@ import android.net.Uri;
 import android.text.TextUtils;
 import android.webkit.URLUtil;
 
-import com.facebook.stetho.okhttp3.StethoInterceptor;
-
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -60,7 +58,7 @@ public class OkHttpUtil {
             .connectTimeout(100, TimeUnit.SECONDS)
             .readTimeout(100, TimeUnit.SECONDS)
             .writeTimeout(100, TimeUnit.SECONDS)
-            .addNetworkInterceptor(new StethoInterceptor())
+//            .addNetworkInterceptor(new StethoInterceptor())
             .build();
 
     /**

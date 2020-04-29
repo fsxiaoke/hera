@@ -5,3 +5,5 @@ node ./bin/weweb -b
 cp  -R "./dist/framework.zip" "../ios/Hera/Resources/HeraRes.bundle/framework.zip" 
 cp  -R "./dist/framework.zip" "../ios/HeraDemo/HeraRes.bundle/framework.zip" 
 cp  -R "./dist/framework.zip" "../android/hera/src/main/assets/framework.zip" 
+adb shell mkdir -p  sdcard/facishare/hera
+adb push dist/framework.zip sdcard/facishare/hera
