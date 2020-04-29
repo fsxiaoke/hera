@@ -103,7 +103,7 @@ function doTransformFile () {
       .catch(e => console.log(e))
   } else {
     var core = require('../lib/core')
-    if (!program.unzip) distPath = distPath + '/app'
+    if (!program.unzip) distPath = distPath
 
     core
       .getOtherFiles(folder, distPath)
