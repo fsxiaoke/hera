@@ -1,11 +1,12 @@
 const duration = 2000
+// import config from '../config'
 class Http {
   request (config) {
     wx.request({
       url: `https://httpbin.org/post`,
       method: 'POST',
       data: {
-        noncestr: Date.now()
+        noncestr: 'config.host'
       },
       success: function (result) {
         wx.showToast({

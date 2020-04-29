@@ -1,7 +1,8 @@
 // import http from '../../../test/fsapi/http/index'
-import http from '../../lib/index'
+// import api from '../../lib/src/api/index.js'
 // var request = require('../../../test/fsapi/http/index.js').request
 // var request = require('../../lib/index.js').request
+import http from '../../lib/src/api/http/index.js'
 
 Page({
   tapName: function (event) {
@@ -24,7 +25,7 @@ Page({
   },
   onReady: function () {
     var self = this
-    wx.getRequestUrl({
+    wx.getHost({
       success (res) {
         self.setData({ text: res.url })
       }

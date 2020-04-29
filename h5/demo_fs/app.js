@@ -1,8 +1,10 @@
 const openIdUrl = require('./config').openIdUrl
+// import api from './lib/src/api/index'
 
 App({
   onLaunch: function () {
     console.log('App Launch')
+    // api.config.init()
   },
   onShow: function () {
     console.log('App Show')
@@ -14,6 +16,7 @@ App({
     hasLogin: false,
     openid: null
   },
+
   // lazy loading openid
   getUserOpenId: function (callback) {
     var self = this

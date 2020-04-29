@@ -674,8 +674,8 @@ var apiObj = {
       }
     })
   },
-  getRequestUrl: function (params) {
-    bridge.invokeMethod('getRequestUrl', params)
+  getHost: function (params) {
+    bridge.invokeMethod('getHost', params)
   },
   getCookies: function (params) {
     bridge.invokeMethod('getCookies', params)
