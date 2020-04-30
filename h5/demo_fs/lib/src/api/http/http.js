@@ -1,5 +1,5 @@
 import config from '../config/index'
-import { isNeedApiPrefix } from '../utils.js'
+import { isNeedApiPrefix, uuid } from '../utils.js'
 
 class Http {
   get (params) {
@@ -12,13 +12,18 @@ class Http {
     this.request(params)
   }
   request (params) {
-    const _params = JSON.parse(JSON.stringify(params))
+    const _params = params
     if (isNeedApiPrefix(_params.url)) {
-      _params.url = `${config.host}${_params.url}`
+      _params.url = `${config.fsInfo.host}${_params.url}`
+      _params.url = `${_params.url}/${config.systemInfo.platform}.${config
+        .fsInfo.versionCode}?_pid=${uuid()}&traceId=E-${config.fsInfo
+        .enterpriseAccount}.${config.fsInfo.employeeID}-${uuid()}&_vn=${config
+        .fsInfo.versionCode}&versionName=${config.fsInfo
+        .versionName}&_postid=${uuid()}`
     }
     _params.header = {
       'accept-language': this.getAcceptLang(),
-      cookie: config.cookie,
+      cookie: config.fsInfo.cookie,
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=UTF-8',
       ...(_params.header || {})
@@ -28,7 +33,7 @@ class Http {
   }
 
   getAcceptLang () {
-    let locale = config.locale
+    let locale = config.fsInfo.language
     switch (locale) {
       case 'zh-CN':
         return 'zh-CN,zh-TW;0.9,en;0.8'

@@ -666,6 +666,10 @@ var apiObj = {
   getNetworkType: function (params) {
     bridge.invokeMethod('getNetworkType', params)
   },
+
+  getFsInfo: function (params) {
+    bridge.invokeMethod('getFsInfo', params)
+  },
   getSystemInfo: function (params) {
     var platform = utils.getPlatform()
     bridge.invokeMethod('getSystemInfo', params, {
@@ -673,15 +677,6 @@ var apiObj = {
         rt.platform = platform
       }
     })
-  },
-  getCurrentLang: function (params) {
-    bridge.invokeMethod('getCurrentLang', params)
-  },
-  getHost: function (params) {
-    bridge.invokeMethod('getHost', params)
-  },
-  getCookie: function (params) {
-    bridge.invokeMethod('getCookie', params)
   },
   getSystemInfoSync: function (params) {
     var rt = {},

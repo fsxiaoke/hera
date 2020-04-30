@@ -1,43 +1,29 @@
 class Config {
   init () {
-    return this.getHost().then(() => {
-      return this.getCookie().then(() => {
-        return this.getCurrentLang()
-      })
+    return this.getFsInfo().then(() => {
+      return this.getSystemInfo()
     })
   }
 
-  getHost () {
+  getFsInfo () {
     return new Promise(resolve => {
       var self = this
-      wx.getHost({
+      wx.getFsInfo({
         success (res) {
-          self.host = res.url || ''
-          resolve(res.url)
+          self.fsInfo = res || ''
+          resolve(res)
         }
       })
     })
   }
 
-  getCookie () {
+  getSystemInfo () {
     return new Promise(resolve => {
       var self = this
-      wx.getCookie({
+      wx.getSystemInfo({
         success (res) {
-          self.cookie = res.cookie || ''
-          resolve(res.cookie)
-        }
-      })
-    })
-  }
-
-  getCurrentLang () {
-    return new Promise(resolve => {
-      var self = this
-      wx.getCurrentLang({
-        success (res) {
-          self.locale = res.locale || ''
-          resolve(res.locale)
+          self.systemInfo = res || ''
+          resolve(res)
         }
       })
     })

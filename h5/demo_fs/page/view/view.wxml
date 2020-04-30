@@ -1,5 +1,5 @@
 
 <view class="page_container">
     <text>hello fone</text>
-    <view bindtap="tapName">{{text}}</view>
+    <view bindtap="tapName"><text>{{text}}</text></view>
 </view>
