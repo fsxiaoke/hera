@@ -1,18 +1,36 @@
-// import http from '../../../test/fsapi/http/index'
-// import api from '../../lib/src/api/index.js'
-// var request = require('../../../test/fsapi/http/index.js').request
-// var request = require('../../lib/index.js').request
-import http from '../../lib/src/api/http/index.js'
+import api from '../../lib/src/api/index'
 
 Page({
   tapName: function (event) {
-    var self = this
-    wx.getCookies({
-      success (res) {
-        self.setData({ text: res.cookies })
+    api.http.post({
+      url:
+        '/FHE/EM1ANCRM/API/v1/object/object_ti13X__c/controller/NewDetail/Android.710000?_pid=bb7382e91aaa4c5e92f8999cdbb35c77&traceId=E-obj0509.1000-52783967e7f945449d6bc94045961811&_vn=710000&_ov=9&channelID=unknown&versionName=7.1.0&_postid=3cf180daa8324f87afd25d2ee95219f4',
+      data: {
+        describeVersionMap: { object_ti13X__c: 210 },
+        objectDataId: '5ea807346d3c320001d9d437',
+        objectDescribeApiName: 'object_ti13X__c'
+      },
+      success: function (result) {
+        wx.showToast({
+          title: '请求成功' + JSON.stringify(result),
+          icon: 'success',
+          mask: true,
+          duration: 2000
+        })
+
+        console.log('request success', result)
+      },
+
+      fail: function ({ errMsg }) {
+        wx.showToast({
+          title: '请求失败' + errMsg,
+          icon: 'fail',
+          mask: true,
+          duration: 2000
+        })
+        console.log('request fail', errMsg)
       }
     })
-    http.request({})
   },
   data: {
     text: 'This is page data.'
@@ -25,11 +43,12 @@ Page({
   },
   onReady: function () {
     var self = this
-    wx.getHost({
-      success (res) {
-        self.setData({ text: res.url })
-      }
-    })
+    self.setData({ text: api.config.host })
+    // wx.getHost({
+    //   success (res) {
+    //     self.setData({ text: res.url })
+    //   }
+    // })
 
     // Do something when page ready.
   },

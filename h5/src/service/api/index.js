@@ -674,11 +674,14 @@ var apiObj = {
       }
     })
   },
+  getCurrentLang: function (params) {
+    bridge.invokeMethod('getCurrentLang', params)
+  },
   getHost: function (params) {
     bridge.invokeMethod('getHost', params)
   },
-  getCookies: function (params) {
-    bridge.invokeMethod('getCookies', params)
+  getCookie: function (params) {
+    bridge.invokeMethod('getCookie', params)
   },
   getSystemInfoSync: function (params) {
     var rt = {},

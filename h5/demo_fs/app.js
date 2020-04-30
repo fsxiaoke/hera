@@ -1,10 +1,10 @@
 const openIdUrl = require('./config').openIdUrl
-// import api from './lib/src/api/index'
+import api from './lib/src/api/index'
 
 App({
   onLaunch: function () {
     console.log('App Launch')
-    // api.config.init()
+    api.config.init()
   },
   onShow: function () {
     console.log('App Show')

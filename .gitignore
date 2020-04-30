@@ -8,3 +8,4 @@ ios/Pods
 android/hera/.project
 android/sample/.project
 android/.project
+*.class

@@ -1,5 +1,5 @@
 module.exports = {
-  extApi:[
+  extApi: [
     {
       name: 'testApi',
       fn: function (params) {
@@ -14,12 +14,6 @@ module.exports = {
       params: {
         name: '',
         param: {}
-      }
-    },
-    {
-      name: 'getCookie',
-      params: {
-        host: ''
       }
     },
     {

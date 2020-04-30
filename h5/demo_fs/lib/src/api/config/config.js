@@ -1,27 +1,43 @@
 class Config {
   init () {
     return this.getHost().then(() => {
-      return this.getCookies()
+      return this.getCookie().then(() => {
+        return this.getCurrentLang()
+      })
     })
   }
 
   getHost () {
     return new Promise(resolve => {
+      var self = this
       wx.getHost({
         success (res) {
-          this.host = res.url || ''
+          self.host = res.url || ''
           resolve(res.url)
         }
       })
     })
   }
 
-  getCookies () {
+  getCookie () {
     return new Promise(resolve => {
-      wx.getCookies({
+      var self = this
+      wx.getCookie({
         success (res) {
-          this.cookies = res.cookies || ''
-          resolve(res.cookies)
+          self.cookie = res.cookie || ''
+          resolve(res.cookie)
+        }
+      })
+    })
+  }
+
+  getCurrentLang () {
+    return new Promise(resolve => {
+      var self = this
+      wx.getCurrentLang({
+        success (res) {
+          self.locale = res.locale || ''
+          resolve(res.locale)
         }
       })
     })
