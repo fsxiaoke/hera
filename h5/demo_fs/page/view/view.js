@@ -1,7 +1,7 @@
 import api from '../../lib/src/api/index'
 
 Page({
-  tapName: function (event) {
+  onHttp: function (event) {
     var self = this
     api.http.post({
       url: '/FHE/EM1ANCRM/API/v1/object/object_ti13X__c/controller/NewDetail',
@@ -32,6 +32,13 @@ Page({
         console.log('request fail', errMsg)
       }
     })
+  },
+
+  navigateBack1: function (event) {
+    wx.navigateBack({ delta: 1 })
+  },
+  navigateBack2: function (event) {
+    wx.navigateBack({ delta: 2 })
   },
   data: {
     text: 'This is page data.'

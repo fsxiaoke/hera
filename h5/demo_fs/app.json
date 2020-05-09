@@ -1,5 +1,5 @@
 {
-  "pages": ["page/view/view", "page/view/button"],
+  "pages": ["page/view/button", "page/view/button2", "page/view/view"],
   "window": {
     "navigationBarTextStyle": "black",
     "navigationBarTitleText": "演示",

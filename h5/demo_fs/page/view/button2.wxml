@@ -1,0 +1,4 @@
+
+<view class="page_container">
+    <button bindtap="ontap" >this is button2 </button>
+</view>

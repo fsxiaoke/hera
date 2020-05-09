@@ -3,7 +3,7 @@ Page({
     console.log('tap')
 
     wx.navigateTo({
-      url: './button2',
+      url: './view',
       success: result => {},
       fail: () => {},
       complete: () => {}

@@ -57,6 +57,8 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
     public static final String APP_ID = "app_id";
     public static final String USER_ID = "user_id";
     public static final String APP_PATH = "app_path";
+    public static final String APP_URL = "app_url";
+
 
     private FrameLayout mContainer;
     private AppConfig mAppConfig;
@@ -65,6 +67,8 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
     private PageManager mPageManager;
 
     private LoadingIndicator mLoadingIndicator;
+
+    String mAppUrl;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -78,6 +82,7 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         String appId = intent.getStringExtra(APP_ID);
         String userId = intent.getStringExtra(USER_ID);
         String appPath = intent.getStringExtra(APP_PATH);
+        mAppUrl = intent.getStringExtra(APP_URL);
         if (TextUtils.isEmpty(appId)) {
             throw new IllegalArgumentException("Intent has not extra 'app_id', " +
                     "start HeraActivity failed!");
@@ -180,7 +185,12 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
     public void onServiceReady() {
         HeraTrace.d(TAG, "onServiceReady()");
         mLoadingIndicator.hide();
-        mPageManager.launchHomePage(mAppConfig.getRootPath(), this);
+        if(TextUtils.isEmpty(mAppUrl)){
+            mPageManager.launchHomePage(mAppConfig.getRootPath(), this);
+        }else{
+            mPageManager.launchHomePage(mAppUrl,this);
+        }
+
     }
 
     @Override

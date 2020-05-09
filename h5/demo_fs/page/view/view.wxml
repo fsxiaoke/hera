@@ -1,5 +1,9 @@
 
 <view class="page_container">
     <text>hello fone</text>
-    <view bindtap="tapName"><text>{{text}}</text></view>
+    <view><text>{{text}}</text></view>
+    <button bindtap="onHttp" >send request </button>
+    <button bindtap="navigateBack1" >back1</button>
+    <button bindtap="navigateBack2" >back2</button>
+    
 </view>
