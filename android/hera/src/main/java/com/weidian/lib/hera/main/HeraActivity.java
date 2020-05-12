@@ -43,10 +43,14 @@ import com.weidian.lib.hera.interfaces.OnEventListener;
 import com.weidian.lib.hera.service.AppService;
 import com.weidian.lib.hera.sync.HeraAppManager;
 import com.weidian.lib.hera.trace.HeraTrace;
+import com.weidian.lib.hera.utils.JsonUtil;
 import com.weidian.lib.hera.utils.StorageUtil;
 import com.weidian.lib.hera.widget.LoadingIndicator;
 
+
 import java.util.Arrays;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * 页面逻辑控制
@@ -119,6 +123,8 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
                 }
             }
         });
+
+        EventBus.getDefault().register(this);
     }
 
     /**
@@ -178,6 +184,8 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         HeraTrace.d(TAG, String.format("MiniApp[%s] close", mAppConfig.getAppId()));
         mApisManager.onDestroy();
         StorageUtil.clearMiniAppTempDir(this, mAppConfig.getAppId());
+
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -212,5 +220,12 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         HeraTrace.d(TAG, String.format("onPageEvent(%s, %s)", event, params));
         return mPageManager.handlePageEvent(event, params, this);
     }
+
+    public void onEventMainThread(PageDataEvent event) {
+        if (mAppService != null && mPageManager != null) {
+            mAppService.subscribeHandler("onAppGetPageData", event.data, mPageManager.getTopPageId());
+        }
+    }
+
 
 }

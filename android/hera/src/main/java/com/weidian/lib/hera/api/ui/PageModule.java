@@ -52,7 +52,7 @@ public class PageModule extends BaseApi {
         return new String[]{"showToast", "hideToast", "showLoading", "hideLoading",
                 "switchTab", "navigateTo", "redirectTo", "reLaunch", "navigateBack",
                 "setNavigationBarTitle", "setNavigationBarColor", "showNavigationBarLoading",
-                "hideNavigationBarLoading", "startPullDownRefresh", "stopPullDownRefresh"};
+                "hideNavigationBarLoading", "startPullDownRefresh", "stopPullDownRefresh","setPageData"};
     }
 
     @Override

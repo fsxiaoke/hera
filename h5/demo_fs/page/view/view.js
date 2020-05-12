@@ -39,6 +39,7 @@ Page({
   },
   navigateBack2: function (event) {
     wx.navigateBack({ delta: 2 })
+    api.page.setPageData({ xxx: 'vvvvvvvvvvvvvv' })
   },
   data: {
     text: 'This is page data.'

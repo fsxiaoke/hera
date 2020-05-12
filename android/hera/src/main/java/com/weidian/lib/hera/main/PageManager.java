@@ -31,10 +31,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.FrameLayout;
@@ -45,6 +42,8 @@ import com.weidian.lib.hera.page.Page;
 import com.weidian.lib.hera.trace.HeraTrace;
 import com.weidian.lib.hera.utils.ColorUtil;
 import com.weidian.lib.hera.utils.JsonUtil;
+
+import de.greenrobot.event.EventBus;
 
 /**
  * {@link Page}管理类
@@ -221,6 +220,9 @@ public class PageManager {
             return startPullDownRefresh();
         } else if ("stopPullDownRefresh".equals(event)) {
             return stopPullDownRefresh();
+        } else if ("setPageData".equals(event)) {
+            EventBus.getDefault().post(new PageDataEvent(params));
+            return true;
         }
         return false;
     }
@@ -360,12 +362,15 @@ public class PageManager {
             return false;
         }
 
-        Page page = getTopPage();
-        if (page == null) {
-            HeraTrace.d(TAG, "redirectToPage failed, no pages available");
-            return false;
-        }
-        page.onRedirectTo(url);
+//        Page page = getTopPage();
+//        if (page == null) {
+//            HeraTrace.d(TAG, "redirectToPage failed, no pages available");
+//            return false;
+//        }
+//        page.onRedirectTo(url);
+        backPage();
+
+        HeraService.launchPage(mContext,mAppConfig.getUserId(),mAppConfig.getAppId(),null,url);
         return true;
     }
 
