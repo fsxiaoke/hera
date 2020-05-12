@@ -43,8 +43,6 @@ import com.weidian.lib.hera.trace.HeraTrace;
 import com.weidian.lib.hera.utils.ColorUtil;
 import com.weidian.lib.hera.utils.JsonUtil;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * {@link Page}管理类
  */
@@ -220,9 +218,6 @@ public class PageManager {
             return startPullDownRefresh();
         } else if ("stopPullDownRefresh".equals(event)) {
             return stopPullDownRefresh();
-        } else if ("setPageData".equals(event)) {
-            EventBus.getDefault().post(new PageDataEvent(params));
-            return true;
         }
         return false;
     }

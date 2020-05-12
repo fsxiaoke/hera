@@ -15,7 +15,6 @@ dependencies {
 
     implementation 'com.tencent.tbs.tbssdk:sdk:43697'
 
-    compileOnly files("libs/EventBus.jar")
 }
 
 android {

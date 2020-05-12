@@ -44,10 +44,12 @@ public class HeraConfig {
 
     private Map<String, IApi> mExtendsApi;
     private boolean mDebug;
+    private Class mLaunchClass;
 
     private HeraConfig(Builder builder) {
         mExtendsApi = builder.extendsApi;
         mDebug = builder.debug;
+        mLaunchClass = builder.launchClass;
     }
 
     public Map<String, IApi> getExtendsApi() {
@@ -63,11 +65,16 @@ public class HeraConfig {
         return mDebug;
     }
 
+    public Class getLaunchClass(){
+        return mLaunchClass;
+    }
+
 
     public static class Builder {
 
         private Map<String, IApi> extendsApi;
         private boolean debug;
+        private Class launchClass;
 
         /**
          * 添加扩展api
@@ -116,6 +123,11 @@ public class HeraConfig {
          */
         public Builder setDebug(boolean debug) {
             this.debug = debug;
+            return this;
+        }
+
+        public Builder setLaunchClass(Class launchClass) {
+            this.launchClass = launchClass;
             return this;
         }
 

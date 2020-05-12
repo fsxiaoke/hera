@@ -97,16 +97,8 @@ public class HeraService extends Service {
      * @param appPath
      */
     public static void launchHome(Context context, String userId, String appId, String appPath) {
-        if (context == null || TextUtils.isEmpty(appId) || TextUtils.isEmpty(userId)) {
-            throw new IllegalArgumentException("context, appId and userId are not null");
-        }
 
-        Intent intent = new Intent(context, HeraActivity.class);
-        intent.putExtra(HeraActivity.APP_ID, appId);
-        intent.putExtra(HeraActivity.USER_ID, userId);
-        intent.putExtra(HeraActivity.APP_PATH, appPath);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
+        launchPage(context,userId,appId,appPath,null);
     }
 
     public static void launchPage(Context context, String userId, String appId, String appPath,String appUrl) {
@@ -114,13 +106,21 @@ public class HeraService extends Service {
             throw new IllegalArgumentException("context, appId and userId are not null");
         }
 
-        Intent intent = new Intent(context, HeraActivity.class);
+        Intent intent = new Intent(context, getLaunchClass());
         intent.putExtra(HeraActivity.APP_ID, appId);
         intent.putExtra(HeraActivity.USER_ID, userId);
         intent.putExtra(HeraActivity.APP_PATH, appPath);
         intent.putExtra(HeraActivity.APP_URL, appUrl);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    private static Class getLaunchClass(){
+        if(sConfig != null && sConfig.getLaunchClass() != null){
+            return sConfig.getLaunchClass();
+        }else{
+            return HeraActivity.class;
+        }
     }
 
     /**
@@ -142,6 +142,8 @@ public class HeraService extends Service {
         }
 
     }
+
+
 
     @Override
     public void onCreate() {

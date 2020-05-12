@@ -50,8 +50,6 @@ import com.weidian.lib.hera.widget.LoadingIndicator;
 
 import java.util.Arrays;
 
-import de.greenrobot.event.EventBus;
-
 /**
  * 页面逻辑控制
  */
@@ -65,10 +63,10 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
 
 
     private FrameLayout mContainer;
-    private AppConfig mAppConfig;
-    private ApisManager mApisManager;
-    private AppService mAppService;
-    private PageManager mPageManager;
+    protected AppConfig mAppConfig;
+    protected ApisManager mApisManager;
+    protected AppService mAppService;
+    protected PageManager mPageManager;
 
     private LoadingIndicator mLoadingIndicator;
 
@@ -124,7 +122,6 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
             }
         });
 
-        EventBus.getDefault().register(this);
     }
 
     /**
@@ -185,7 +182,6 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         mApisManager.onDestroy();
         StorageUtil.clearMiniAppTempDir(this, mAppConfig.getAppId());
 
-        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 
@@ -221,11 +217,7 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         return mPageManager.handlePageEvent(event, params, this);
     }
 
-    public void onEventMainThread(PageDataEvent event) {
-        if (mAppService != null && mPageManager != null) {
-            mAppService.subscribeHandler("onAppGetPageData", event.data, mPageManager.getTopPageId());
-        }
-    }
+
 
 
 }
