@@ -105,6 +105,7 @@ public class ZipUtil {
             Log.d(TAG, "unzip done");
         } catch (IOException e) {
             Log.e("Hera", "unzip from inputStream exception, " + e.getMessage());
+            new File(outputDir).deleteOnExit();
             return false;
         } finally {
             IOUtil.closeAll(zis, fos);
