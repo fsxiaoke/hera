@@ -5,12 +5,15 @@ const util = require('./util')
 const parser = require('./parser')
 
 // build service file
-builder.build().then(res => {
-  return res
-}, err => {
-  onError(err)
-  process.exit()
-})
+builder.build().then(
+  res => {
+    return res
+  },
+  err => {
+    onError(err)
+    process.exit()
+  }
+)
 
 // parse wxml and wxss files
 setImmediate(() => {
@@ -21,17 +24,17 @@ setImmediate(() => {
     let wxss = `${p}.wxss`
     fs.stat(wxml, (err, stats) => {
       if (err || !stats.isFile()) return onError(new Error(`${wxml} 未找到，请检查`))
-      parser(wxml).catch(onError)
+      parser.exe(wxml).catch(onError)
     })
-    fs.stat(wxss, (err) => {
+    fs.stat(wxss, err => {
       // should be fine
       if (err) return
-      parser(wxss).catch(onError)
+      parser.exe(wxss).catch(onError)
     })
   })
 })
 
-function onError(err) {
+function onError (err) {
   console.log(chalk.red(err.message))
   util.notifyError(err)
 }

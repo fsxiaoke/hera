@@ -71,18 +71,25 @@ public class HeraWebView extends WebView {
         webSetting.setAllowFileAccess(true);
         webSetting.setBuiltInZoomControls(true);
         webSetting.setDisplayZoomControls(false);
-        webSetting.setSupportMultipleWindows(false);
         webSetting.setAppCacheEnabled(true);
         webSetting.setDomStorageEnabled(true);
         webSetting.setDatabaseEnabled(true);
         webSetting.setJavaScriptEnabled(true);
         webSetting.setGeolocationEnabled(true);
         webSetting.setUseWideViewPort(true);
-        webSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
+//        webSetting.setCacheMode(WebSettings.LOAD_NO_CACHE);
         String ua = webSetting.getUserAgentString();
         webSetting.setUserAgentString(String.format("%s Hera(version/%s)", ua, HeraConfig.VERSION));
         setVerticalScrollBarEnabled(false);
         setHorizontalScrollBarEnabled(false);
+
+
+//        webSetting.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NARROW_COLUMNS);
+//        webSetting.setSupportZoom(true);
+//        webSetting.setAppCacheEnabled(true);
+//        webSetting.setGeolocationEnabled(true);
+//        webSetting.setAppCacheMaxSize(Long.MAX_VALUE);
+//        webSetting.setPluginState(WebSettings.PluginState.ON_DEMAND);
     }
 
     public void setJsHandler(IBridge handler) {

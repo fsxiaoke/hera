@@ -1,3 +1,4 @@
+@import 'my.wxss';
 .flex-wrp {
   margin-top: 60rpx;
   display: flex;

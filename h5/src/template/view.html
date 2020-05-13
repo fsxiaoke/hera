@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 
 <head>
+  <title>{{= _.pageTitle}}</title>
   <link href="https://res.wx.qq.com/mpres/htmledition/images/favicon218877.ico" rel="Shortcut Icon">
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0" />
@@ -22,11 +23,14 @@
 
   </script>
   <script>
-    document.dispatchEvent(new CustomEvent("generateFuncReady", {
+    setTimeout(function(){
+      document.dispatchEvent(new CustomEvent("generateFuncReady", {
       detail: {
         generateFunc: $gwx('./{{= _.path}}.wxml')
       }
     }))
+    },3000)
+    
   </script>
 </head>
 

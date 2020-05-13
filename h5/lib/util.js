@@ -92,40 +92,89 @@ exports.exists = function (p) {
 
 exports.readFile = function (p) {
   return new Promise(function (resolve, reject) {
-    fs.readFile(p, 'utf8', function (err, content) {
-      if (err) reject(err)
-      resolve(content)
-    })
+    let content = fs.readFileSync(p, 'utf8')
+    resolve(content)
   })
 }
+exports.readFileSync = function (p) {
+  return fs.readFileSync(p, 'utf8')
+}
 
+// exports.parseImports = function parseImports (res, file, cb) {
+//   // 解析wxml获取页面所有引入文件路径
+//   fs.readFile(file, 'utf8', (err, xml) => {
+//     if (err) return cb(err)
+//     let re = /<(import|include)\s+[^>]+?>/g
+//     let arr = []
+//     let p = new Parallel()
+//     while ((arr = re.exec(xml)) !== null) {
+//       let ms = arr[0].match(/src=(['"])([^\1]+)\1/)
+//       if (ms && ms[2]) {
+//         let f = /^\//.test(ms[2])
+//           ? ms[2].replace(/^\//, '')
+//           : path.join(path.dirname(file), ms[2])
+//         f = /\.wxml/.test(f) ? f : `${f}.wxml`
+//         f = normalizePath(f)
+//         if (res.indexOf(f) == -1) {
+//           res.push(f)
+//           p.add(done => {
+//             parseImports(res, f, done)
+//           })
+//         }
+//       }
+//     }
+//     p.done(cb)
+//   })
+// }
 exports.parseImports = function parseImports (res, file, cb) {
+  parseImportsIn(res, file)
+  cb()
+}
+function parseImportsIn (res, file) {
   // 解析wxml获取页面所有引入文件路径
-  fs.readFile(file, 'utf8', (err, xml) => {
-    if (err) return cb(err)
-    let re = /<(import|include)\s+[^>]+?>/g
-    let arr = []
-    let p = new Parallel()
-    while ((arr = re.exec(xml)) !== null) {
-      let ms = arr[0].match(/src=(['"])([^\1]+)\1/)
-      if (ms && ms[2]) {
-        let f = /^\//.test(ms[2])
-          ? ms[2].replace(/^\//, '')
-          : path.join(path.dirname(file), ms[2])
-        f = /\.wxml/.test(f) ? f : `${f}.wxml`
-        f = normalizePath(f)
-        if (res.indexOf(f) == -1) {
-          res.push(f)
-          p.add(done => {
-            parseImports(res, f, done)
-          })
-        }
+  let xml = fs.readFileSync(file, 'utf8')
+  let re = /<(import|include)\s+[^>]+?>/g
+  let arr = []
+  // let p = new Parallel()
+  while ((arr = re.exec(xml)) !== null) {
+    let ms = arr[0].match(/src=(['"])([^\1]+)\1/)
+    if (ms && ms[2]) {
+      let f = /^\//.test(ms[2])
+        ? ms[2].replace(/^\//, '')
+        : path.join(path.dirname(file), ms[2])
+      f = /\.wxml/.test(f) ? f : `${f}.wxml`
+      f = normalizePath(f)
+      if (res.indexOf(f) == -1) {
+        res.push(f)
+        // p.add(done => {
+        parseImportsIn(res, f)
+        // })
       }
     }
-    p.done(cb)
-  })
+  }
+  // p.done(cb)
 }
+exports.prefixCss = function prefixCss (prefix, content) {
+  let re = /\.?.+\{/g
 
+  let arr = []
+  // content=content.replace(/[\s ]/g,'')
+  let ret = {}
+  ret.content = content
+  ret.classes = {}
+  while ((arr = re.exec(content)) !== null) {
+    let temp = arr[0].split('.')
+    if (temp.length > 2) {
+    } else {
+      let curClass = arr[0].substring(0, arr[0].length - 1).trim()
+      let patten = new RegExp(curClass, 'g')
+      let temp1 = curClass.substring(1, curClass.length)
+      ret.content = ret.content.replace(patten, '.' + prefix + '_' + temp1)
+      ret.classes[temp1] = prefix + '_' + temp1
+    }
+  }
+  return ret
+}
 exports.parseCssImports = function parseCssImports (res, file, cb) {
   let re = /\s*@import\s+[^;]+?;/g
   fs.readFile(file, 'utf8', (err, content) => {
@@ -150,6 +199,30 @@ exports.parseCssImports = function parseCssImports (res, file, cb) {
     }
     p.done(cb)
   })
+}
+
+exports.parseCssImportsSync = function parseCssImportsSync (res, file, cb) {
+  parseCssImport(res, file)
+  cb()
+}
+function parseCssImport (res, file) {
+  let re = /\s*@import\s+[^;]+?;/g
+  let content = fs.readFileSync(file, 'utf8')
+  let arr = []
+  content = content.replace(/\/\*[\s\S]*?\*\//g, '')
+  while ((arr = re.exec(content)) !== null) {
+    let ms = arr[0].match(/(['"])([^\1]+)\1/)
+    if (ms && ms[2]) {
+      let f = /^\//.test(ms[2])
+        ? ms[2].replace(/^\//, '')
+        : path.join(path.dirname(file), ms[2])
+      f = normalizePath(f)
+      if (res.indexOf(f) == -1) {
+        res.push(f)
+        parseCssImport(res, f)
+      }
+    }
+  }
 }
 
 exports.loadTemplate = function (name) {
