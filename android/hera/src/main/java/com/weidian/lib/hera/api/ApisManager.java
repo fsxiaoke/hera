@@ -62,6 +62,7 @@ import com.weidian.lib.hera.api.ui.DialogModule;
 import com.weidian.lib.hera.api.ui.PageModule;
 import com.weidian.lib.hera.config.AppConfig;
 import com.weidian.lib.hera.interfaces.IApi;
+import com.weidian.lib.hera.interfaces.IApiSync;
 import com.weidian.lib.hera.interfaces.IBridge;
 import com.weidian.lib.hera.interfaces.ICallback;
 import com.weidian.lib.hera.interfaces.OnEventListener;
@@ -251,7 +252,16 @@ public class ApisManager implements ServiceConnection {
             }
         }
     }
-
+    public String invokeSync(Event event, IBridge bridge) {
+        ICallback callback = new ApiCallback(event, bridge);
+        IApi api = APIS.get(event.getName());
+        String ret="";
+        if (api != null) {
+            CALLING_APIS.put(event, Pair.create(api, callback));
+            ret = ((IApiSync)api).invokeSync(event.getName(), event.getParam(), callback);
+        }
+        return ret;
+    }
     /**
      * api功能调用
      *

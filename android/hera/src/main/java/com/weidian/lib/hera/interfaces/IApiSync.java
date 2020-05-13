@@ -27,37 +27,20 @@
 
 package com.weidian.lib.hera.interfaces;
 
+import org.json.JSONObject;
+
 /**
- * H5-->Native的调用接口
+ * Api接口，实现相应功能的Api需实现此接口
  */
-public interface IBridge {
+public interface IApiSync extends ILifecycle {
+
 
     /**
-     * 发布事件，由Service层或View层的JSBridge调用
+     * 接收到对应的api调用时，会调用此方法，在此方法中处理api调用的功能逻辑
      *
-     * @param event   事件名称
-     * @param params  参数
-     * @param viewIds 页面的id数组字符串
+     * @param event    事件名称，即api名称
+     * @param param    参数
+     * @param callback 回调接口
      */
-    void publish(String event, String params, String viewIds);
-
-    /**
-     * 调用事件，由Service层或View层的JSBridge调用
-     *
-     * @param event         事件名称
-     * @param params        参数
-     * @param callbackId    回调函数的id，执行结果回调时使用
-     */
-    void invoke(String event, String params, String callbackId);
-
-    String invokeSync(String event, String params, String callbackId);
-
-    /**
-     * 事件处理完成后的回调
-     *
-     * @param callbackId 回调函数的id
-     * @param result     事件的处理结果
-     */
-    void callback(String callbackId, String result);
-
+    String invokeSync(String event, JSONObject param, ICallback callback);
 }

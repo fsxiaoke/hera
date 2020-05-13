@@ -75,5 +75,15 @@ public class JSInterface {
             }
         });
     }
+    @JavascriptInterface
+    public String invokeHandlerSync(final String event, final String params, final String callbackId) {
+        HeraTrace.d(TAG, String.format("invokeHandler is called! event=%s, params=%s, callbackId=%s",
+                event, params, callbackId));
+        String ret="";
+        if (mBridgeHandler != null) {
+            ret = mBridgeHandler.invokeSync(event, params, callbackId);
+        }
+        return ret;
+    }
 
 }

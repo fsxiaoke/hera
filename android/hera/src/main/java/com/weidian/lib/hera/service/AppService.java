@@ -108,7 +108,13 @@ public class AppService extends LinearLayout implements IBridge {
         Event e = new Event(event, params, callbackId);
         mApisManager.invoke(e, this);
     }
-
+    @Override
+    public String invokeSync(String event, String params, String callbackId) {
+        HeraTrace.d(TAG, String.format("api invoke, event=%s, params=%s, callbackId=%s",
+                event, params, callbackId));
+        Event e = new Event(event, params, callbackId);
+        return mApisManager.invokeSync(e, this);
+    }
     @Override
     public void callback(String callbackId, String result) {
         mServiceWebView.loadUrl(

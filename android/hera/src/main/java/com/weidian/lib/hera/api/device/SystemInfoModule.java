@@ -34,6 +34,7 @@ import android.os.Build;
 import android.util.DisplayMetrics;
 
 import com.weidian.lib.hera.api.BaseApi;
+import com.weidian.lib.hera.interfaces.IApiSync;
 import com.weidian.lib.hera.interfaces.ICallback;
 import com.weidian.lib.hera.trace.HeraTrace;
 import com.weidian.lib.hera.utils.DensityUtil;
@@ -45,7 +46,7 @@ import org.json.JSONObject;
 /**
  * 获取系统信息api
  */
-public class SystemInfoModule extends BaseApi {
+public class SystemInfoModule extends BaseApi implements IApiSync {
     private String model;
     private float pixelRatio;
     private int screenWidth;
@@ -75,10 +76,10 @@ public class SystemInfoModule extends BaseApi {
         DisplayMetrics dm = getContext().getResources().getDisplayMetrics();
         this.model = Build.MODEL;
         this.pixelRatio = dm.density;
-        this.screenWidth = dm.widthPixels;
-        this.screenHeight = dm.heightPixels;
-        this.windowWidth = dm.widthPixels;
-        this.windowHeight = dm.heightPixels - statusBarHeight - getActionBarSize(getContext());
+        this.screenWidth = (int)(dm.widthPixels/dm.density);
+        this.screenHeight = (int)(dm.heightPixels/dm.density);
+        this.windowWidth = (int)(dm.widthPixels/dm.density);
+        this.windowHeight = (int)(dm.heightPixels/dm.density - statusBarHeight/dm.density - getActionBarSize(getContext())/dm.density );
         this.language = "zh-CN";
         this.version = "1.0";
         this.system = Build.VERSION.RELEASE;
@@ -123,4 +124,27 @@ public class SystemInfoModule extends BaseApi {
         }
     }
 
+    @Override
+    public String invokeSync(String event, JSONObject param, ICallback callback) {
+        String ret="";
+        try {
+            JSONObject result = new JSONObject();
+            result.put("model", model);
+            result.put("pixelRatio", pixelRatio);
+            result.put("screenWidth", screenWidth);
+            result.put("screenHeight", screenHeight);
+            result.put("windowWidth", windowWidth);
+            result.put("windowHeight", windowHeight);
+            result.put("language", language);
+            result.put("version", version);
+            result.put("system", system);
+            result.put("platform", platform);
+            result.put("SDKVersion", SDKVersion);
+            ret=result.toString();
+        } catch (JSONException e) {
+            HeraTrace.e(TAG, "systemInfo assemble result exception!");
+            callback.onFail();
+        }
+        return ret;
+    }
 }
