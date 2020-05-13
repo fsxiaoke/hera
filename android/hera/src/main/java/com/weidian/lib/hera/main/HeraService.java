@@ -33,12 +33,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
 
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.smtt.sdk.TbsListener;
+import com.tencent.smtt.sdk.WebView;
 import com.weidian.lib.hera.config.AppConfig;
 import com.weidian.lib.hera.config.HeraConfig;
 import com.weidian.lib.hera.trace.HeraTrace;
@@ -142,9 +144,9 @@ public class HeraService extends Service {
             sConfig = new HeraConfig.Builder()
                     .setDebug(debug).build();
         }
-//        if (config().isDebug() && Build.VERSION.SDK_INT >= 19) {
-//            WebView.setWebContentsDebuggingEnabled(true);
-//        }
+        if (config().isDebug() && Build.VERSION.SDK_INT >= 19) {
+            WebView.setWebContentsDebuggingEnabled(true);
+        }
         return START_NOT_STICKY;
     }
 

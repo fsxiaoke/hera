@@ -103,6 +103,7 @@ function doTransformFile () {
       .catch(e => console.log(e))
   } else {
     var core = require('../lib/core')
+    var parser = require('../lib/parser')
     if (!program.unzip) distPath = distPath
 
     core
@@ -163,10 +164,12 @@ function doTransformFile () {
           path = paths.join('/')
           core
             .getPage(fullpath)
-            .then(arr =>
-              viewTpl.then(viewFn =>
-                viewFn(
+            .then(async arr => {
+              let ret
+              await viewTpl.then(viewFn => {
+                ret = viewFn(
                   {
+                    pageTitle: fullpath.replace(/\//g, '_'),
                     css:
                       appCss +
                       '\n' +
@@ -180,8 +183,9 @@ function doTransformFile () {
                   {},
                   x => x
                 )
-              )
-            )
+              })
+              return ret
+            })
             .then(content =>
               util.createFile(
                 distPath + '/' + path,
