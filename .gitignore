@@ -8,3 +8,9 @@ ios/Pods
 android/hera/.project
 android/sample/.project
 android/.project
+*.class
+android/hera/.settings/org.eclipse.buildship.core.prefs
+android/.settings/org.eclipse.buildship.core.prefs
+android/hera/.classpath
+android/sample/.classpath
+android/sample/.settings/org.eclipse.buildship.core.prefs

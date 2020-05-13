@@ -27,6 +27,7 @@
 
 package com.weidian.lib.hera.main;
 
+import android.app.Application;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -74,9 +75,10 @@ public class HeraService extends Service {
      * @param context
      * @param config
      */
-    public static void start(Context context, HeraConfig config) {
+    public static void start(Application context, HeraConfig config) {
         HeraTrace.d(TAG, "start HeraProcessService");
         sConfig = config;//宿主进程记录的HeraConfig
+        GlobalPageManager.getInstance().init(context);
         initFramework(context);
 
         initX5(context);
@@ -97,16 +99,30 @@ public class HeraService extends Service {
      * @param appPath
      */
     public static void launchHome(Context context, String userId, String appId, String appPath) {
+
+        launchPage(context,userId,appId,appPath,null);
+    }
+
+    public static void launchPage(Context context, String userId, String appId, String appPath,String appUrl) {
         if (context == null || TextUtils.isEmpty(appId) || TextUtils.isEmpty(userId)) {
             throw new IllegalArgumentException("context, appId and userId are not null");
         }
 
-        Intent intent = new Intent(context, HeraActivity.class);
+        Intent intent = new Intent(context, getLaunchClass());
         intent.putExtra(HeraActivity.APP_ID, appId);
         intent.putExtra(HeraActivity.USER_ID, userId);
         intent.putExtra(HeraActivity.APP_PATH, appPath);
+        intent.putExtra(HeraActivity.APP_URL, appUrl);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
+    }
+
+    private static Class getLaunchClass(){
+        if(sConfig != null && sConfig.getLaunchClass() != null){
+            return sConfig.getLaunchClass();
+        }else{
+            return HeraActivity.class;
+        }
     }
 
     /**
@@ -128,6 +144,8 @@ public class HeraService extends Service {
         }
 
     }
+
+
 
     @Override
     public void onCreate() {

@@ -17,12 +17,6 @@ module.exports = {
       }
     },
     {
-      name: 'getCookie',
-      params: {
-        host: ''
-      }
-    },
-    {
       name: 'openLink',
       params: {
         url: ''

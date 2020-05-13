@@ -31,10 +31,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.LayoutTransition;
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.widget.FrameLayout;
@@ -332,13 +329,15 @@ public class PageManager {
             return false;
         }
 
-        Page page = createAndAddPage(url, listener);
-        if (page == null) {
-            HeraTrace.d(TAG, String.format("navigateToPage failed, no more than %s pages", MAX_COUNT));
-            return false;
-        }
+//        Page page = createAndAddPage(url, listener);
+//        if (page == null) {
+//            HeraTrace.d(TAG, String.format("navigateToPage failed, no more than %s pages", MAX_COUNT));
+//            return false;
+//        }
+//
+//        page.onNavigateTo(url);
 
-        page.onNavigateTo(url);
+        HeraService.launchPage(mContext,mAppConfig.getUserId(),mAppConfig.getAppId(),null,url);
         return true;
     }
 
@@ -358,12 +357,15 @@ public class PageManager {
             return false;
         }
 
-        Page page = getTopPage();
-        if (page == null) {
-            HeraTrace.d(TAG, "redirectToPage failed, no pages available");
-            return false;
-        }
-        page.onRedirectTo(url);
+//        Page page = getTopPage();
+//        if (page == null) {
+//            HeraTrace.d(TAG, "redirectToPage failed, no pages available");
+//            return false;
+//        }
+//        page.onRedirectTo(url);
+        backPage();
+
+        HeraService.launchPage(mContext,mAppConfig.getUserId(),mAppConfig.getAppId(),null,url);
         return true;
     }
 
@@ -410,17 +412,19 @@ public class PageManager {
      * @return true：成功，否则亦然
      */
     private boolean navigateBackPage(int delta) {
-        if (!removePages(delta)) {
-            HeraTrace.d(TAG, String.format("navigateBackPage failed, delta must be in [1, %s]",
-                    getPageCount() - 1));
-            return false;
-        }
+//        if (!removePages(delta)) {
+//            HeraTrace.d(TAG, String.format("navigateBackPage failed, delta must be in [1, %s]",
+//                    getPageCount() - 1));
+//            return false;
+//        }
+//
+//        Page page = getTopPage();
+//        if (page != null) {
+//            page.onNavigateBack();
+//        }
+//        return true;
 
-        Page page = getTopPage();
-        if (page != null) {
-            page.onNavigateBack();
-        }
-        return true;
+        return GlobalPageManager.getInstance().navigateBackPage(delta);
     }
 
     /**

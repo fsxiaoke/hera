@@ -666,6 +666,10 @@ var apiObj = {
   getNetworkType: function (params) {
     bridge.invokeMethod('getNetworkType', params)
   },
+
+  getFsInfo: function (params) {
+    bridge.invokeMethod('getFsInfo', params)
+  },
   getSystemInfo: function (params) {
     var platform = utils.getPlatform()
     bridge.invokeMethod('getSystemInfo', params, {
@@ -673,12 +677,6 @@ var apiObj = {
         rt.platform = platform
       }
     })
-  },
-  getRequestUrl: function (params) {
-    bridge.invokeMethod('getRequestUrl', params)
-  },
-  getCookies: function (params) {
-    bridge.invokeMethod('getCookies', params)
   },
   getSystemInfoSync: function (params) {
     var rt = {},
@@ -1020,6 +1018,14 @@ var apiObj = {
   onAppRunningStatusChange: function (params) {
     appContextSwitch.onAppRunningStatusChange.call(apiObj, params)
   },
+  onAppGetPageData: function (params) {
+    // 用于页面间传递数据
+    appContextSwitch.onAppGetPageData.call(apiObj, params)
+  },
+  setPageData: function (params) {
+    bridge.invokeMethod('setPageData', params)
+  },
+
   setAppData: function (data) {
     var options =
         arguments.length > 1 && void 0 !== arguments[1] ? arguments[1] : {},

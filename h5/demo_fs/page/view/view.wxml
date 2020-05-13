@@ -1,7 +1,10 @@
 <import src="head.wxml" />
 <import src="foot.wxml"/>
 <view class="page_container">
-    <text bindtap="tapName">hello fone</text>
-    <view>{{text}}</view>
+    <text>hello fone</text>
+    <view><text>{{text}}</text></view>
     <mytag> </mytag>
+    <button bindtap="navigateBack1" >back1</button>
+    <button bindtap="navigateBack2" >back2</button>
+    
 </view>

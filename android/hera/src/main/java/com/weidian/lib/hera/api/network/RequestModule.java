@@ -38,7 +38,12 @@ import com.weidian.lib.hera.utils.OkHttpUtil;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 import okhttp3.Call;
@@ -46,6 +51,7 @@ import okhttp3.Callback;
 import okhttp3.FormBody;
 import okhttp3.Headers;
 import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 /**
@@ -70,14 +76,14 @@ public class RequestModule extends BaseApi {
         String method = param.optString("method");
         JSONObject header = param.optJSONObject("header");
         String dataStr = param.optString("data");
-        JSONObject data = null;
-        try {
-            if (!TextUtils.isEmpty(dataStr)) {
-                data = new JSONObject(dataStr);
-            }
-        } catch (JSONException e) {
-            //ignore
-        }
+//        JSONObject data = null;
+//        try {
+//            if (!TextUtils.isEmpty(dataStr)) {
+//                data = new JSONObject(dataStr);
+//            }
+//        } catch (JSONException e) {
+//            //ignore
+//        }
 
         if (TextUtils.isEmpty(url)) {
             callback.onFail();
@@ -88,18 +94,26 @@ public class RequestModule extends BaseApi {
             method = METHOD_GET;
         }
 
-        Map<String, String> reqParam = OkHttpUtil.parseJsonToMap(data);
+//        Map<String, String> reqParam = OkHttpUtil.parseJsonToMap(data);
         Headers headers = Headers.of(OkHttpUtil.parseJsonToMap(header));
         Request.Builder requestBuilder = new Request.Builder().headers(headers);
         if (METHOD_GET.equals(method)) {
             //url = OkHttpUtil.appendUrlParams(url, reqParam);
             requestBuilder.url(url).get();
         } else {
-            FormBody.Builder formBuilder = new FormBody.Builder();
-            for (Map.Entry<String, String> entry : reqParam.entrySet()) {
-                formBuilder.add(entry.getKey(), entry.getValue());
+//            FormBody.Builder formBuilder = new FormBody.Builder();
+//            for (Map.Entry<String, String> entry : reqParam.entrySet()) {
+//                formBuilder.add(entry.getKey(), entry.getValue());
+//            }
+//            requestBuilder.url(url).method(method, formBuilder.build());
+            RequestBody rb = null;
+            try {
+                rb = RequestBody.create(okhttp3.MediaType.parse("application/json"), dataStr.getBytes("utf-8"));
+            }catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
             }
-            requestBuilder.url(url).method(method, formBuilder.build());
+
+            requestBuilder.url(url).method(method, rb);
         }
 
         OkHttpUtil.enqueue(requestBuilder.build(), new Callback() {
@@ -118,7 +132,7 @@ public class RequestModule extends BaseApi {
                 try {
                     final JSONObject data = new JSONObject();
                     data.put("statusCode", response.code());
-                    String result = response.body().string();
+                    String result = readStr(response.body().byteStream(),"UTF-8");
                     data.put("data", result);
                     JSONObject headerJson = new JSONObject();
                     Headers resHeaders = response.headers();
@@ -143,5 +157,23 @@ public class RequestModule extends BaseApi {
                 }
             }
         });
+    }
+
+    public static String readStr(InputStream in, String charset) throws IOException {
+        if (TextUtils.isEmpty(charset)) {
+            charset = "UTF-8";
+        }
+
+        if (!(in instanceof BufferedInputStream)) {
+            in = new BufferedInputStream(in);
+        }
+        Reader reader = new InputStreamReader(in, charset);
+        StringBuilder sb = new StringBuilder();
+        char[] buf = new char[1024];
+        int len;
+        while ((len = reader.read(buf)) >= 0) {
+            sb.append(buf, 0, len);
+        }
+        return sb.toString();
     }
 }

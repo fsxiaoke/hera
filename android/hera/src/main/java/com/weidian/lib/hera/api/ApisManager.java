@@ -43,6 +43,7 @@ import android.os.RemoteException;
 import android.text.TextUtils;
 import android.util.Pair;
 
+import com.weidian.lib.hera.BuildConfig;
 import com.weidian.lib.hera.api.debug.DebugModule;
 import com.weidian.lib.hera.api.device.ClipboardModule;
 import com.weidian.lib.hera.api.device.NetInfoModule;
@@ -64,6 +65,7 @@ import com.weidian.lib.hera.interfaces.IApi;
 import com.weidian.lib.hera.interfaces.IBridge;
 import com.weidian.lib.hera.interfaces.ICallback;
 import com.weidian.lib.hera.interfaces.OnEventListener;
+import com.weidian.lib.hera.main.HeraService;
 import com.weidian.lib.hera.model.Event;
 import com.weidian.lib.hera.remote.RemoteService;
 import com.weidian.lib.hera.trace.HeraTrace;
@@ -71,8 +73,12 @@ import com.weidian.lib.hera.trace.HeraTrace;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,6 +92,7 @@ public class ApisManager implements ServiceConnection {
     public static final int FAIL = 0x11;
     public static final int CANCEL = 0x12;
     public static final int PENDING = 0x13;
+    private static Map<String,Class<? extends BaseApi>> extendsApiClass = new HashMap<>();
 
     private final IApi EMPTY_API = new EmptyApi();
     private final Map<String, IApi> APIS = new HashMap<>();
@@ -94,6 +101,10 @@ public class ApisManager implements ServiceConnection {
     private Activity mActivity;
     private Messenger mSender;//发送请求的Messenger
     private Messenger mReceiver;//接收请求结果的Messenger
+
+    public static  void registerExtendsApi(Class<? extends BaseApi> apiClass){
+        extendsApiClass.put(apiClass.getName(),apiClass);
+    }
 
     //处理请求的结果
     private Handler mHandler = new Handler(Looper.getMainLooper()) {
@@ -310,6 +321,21 @@ public class ApisManager implements ServiceConnection {
 
         //文件
         add(new FileModule(activity, appConfig));
+        initExtendsApi();
+    }
+
+    private void initExtendsApi(){
+        Iterator<Class<? extends BaseApi>> it = extendsApiClass.values().iterator();
+        while (it.hasNext()) {
+            Class<? extends BaseApi> apiClass = it.next();
+            try {
+                Constructor constructor = apiClass.getConstructor(Context.class);
+                BaseApi api = (BaseApi) constructor.newInstance(mActivity);
+                add(api);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private void add(IApi api) {
@@ -317,6 +343,10 @@ public class ApisManager implements ServiceConnection {
             String[] apiNames = api.apis();
             for (String name : apiNames) {
                 if (!TextUtils.isEmpty(name)) {
+                    if(HeraService.config().isDebug()&&APIS.containsKey(name)){
+                        throw new IllegalArgumentException("APIS already contains this api:"+ name);
+                    }
+
                     APIS.put(name, api);
                 }
             }

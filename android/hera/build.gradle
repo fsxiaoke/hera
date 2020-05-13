@@ -14,6 +14,7 @@ dependencies {
     compile 'me.iwf.photopicker:PhotoPicker:0.9.5@aar'
 
     implementation 'com.tencent.tbs.tbssdk:sdk:43697'
+
 }
 
 android {

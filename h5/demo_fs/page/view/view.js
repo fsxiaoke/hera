@@ -1,17 +1,45 @@
-// import http from '../../../test/fsapi/http/index'
-import http from '../../lib/index'
-// var request = require('../../../test/fsapi/http/index.js').request
-// var request = require('../../lib/index.js').request
+import api from '../../lib/src/api/index'
 
 Page({
-  tapName: function (event) {
+  onHttp: function (event) {
     var self = this
-    wx.getCookies({
-      success (res) {
-        self.setData({ text: res.cookies })
+    api.http.post({
+      url: '/FHE/EM1ANCRM/API/v1/object/object_ti13X__c/controller/NewDetail',
+      data: {
+        describeVersionMap: { object_ti13X__c: 210 },
+        objectDataId: '5ea807346d3c320001d9d437',
+        objectDescribeApiName: 'object_ti13X__c'
+      },
+      success: function (result) {
+        self.setData({ text: `statusCode:${result.statusCode}` })
+        // wx.showToast({
+        //   title: '请求成功' + JSON.stringify(result),
+        //   icon: 'success',
+        //   mask: true,
+        //   duration: 2000
+        // })
+
+        console.log('request success', result)
+      },
+
+      fail: function ({ errMsg }) {
+        wx.showToast({
+          title: '请求失败' + errMsg,
+          icon: 'fail',
+          mask: true,
+          duration: 2000
+        })
+        console.log('request fail', errMsg)
       }
     })
-    http.request({})
+  },
+
+  navigateBack1: function (event) {
+    wx.navigateBack({ delta: 1 })
+  },
+  navigateBack2: function (event) {
+    wx.navigateBack({ delta: 2 })
+    api.page.setPageData({ xxx: 'vvvvvvvvvvvvvv' })
   },
   data: {
     text: 'This is page data.'
@@ -23,13 +51,8 @@ Page({
     // Do something when page show.
   },
   onReady: function () {
-    var self = this
-    wx.getRequestUrl({
-      success (res) {
-        self.setData({ text: res.url })
-      }
-    })
-
+    // var self = this
+    // self.setData({ text: JSON.stringify(api.config.fsInfo)+"\n"+JSON.stringify(api.config.systemInfo) })
     // Do something when page ready.
   },
   onHide: function () {
