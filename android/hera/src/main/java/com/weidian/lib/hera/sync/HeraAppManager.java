@@ -90,26 +90,29 @@ public class HeraAppManager {
             String appId = params[0];
             String appPath = params[1];
             String outputPath = StorageUtil.getMiniAppSourceDir(mContext, appId).getAbsolutePath();
-            boolean unzipResult = false;
-            if (!TextUtils.isEmpty(appPath)) {
-                unzipResult = ZipUtil.unzipFile(appPath, outputPath);
-            }
-            if (!unzipResult) {
-                try {
-                    InputStream in = null;
-                    File f=new File("sdcard/facishare/hera/"+appId+".zip");
-                    if(f.exists()&& HeraService.config().isDebug()){
-                        in = new FileInputStream(f);
-                    }else{
-                        in=mContext.getAssets().open(appId + ".zip");
+            File serviceFile = new File(outputPath, "service.html");
+            boolean unzipResult = serviceFile.exists();
+            if(!unzipResult) {
+                if (!TextUtils.isEmpty(appPath)) {
+                    unzipResult = ZipUtil.unzipFile(appPath, outputPath);
+                }
+                if (!unzipResult) {
+                    try {
+                        InputStream in = null;
+                        File f = new File("sdcard/facishare/hera/" + appId + ".zip");
+                        if (f.exists() && HeraService.config().isDebug()) {
+                            in = new FileInputStream(f);
+                        } else {
+                            in = mContext.getAssets().open(appId + ".zip");
+                        }
+                        unzipResult = ZipUtil.unzipFile(in, outputPath);
+                    } catch (IOException e) {
+                        HeraTrace.e(TAG, e.getMessage());
                     }
-                    unzipResult = ZipUtil.unzipFile(in, outputPath);
-                } catch (IOException e) {
-                    HeraTrace.e(TAG, e.getMessage());
                 }
             }
 
-            return unzipResult && new File(outputPath, "service.html").exists();
+            return unzipResult && serviceFile.exists();
         }
 
         @Override
