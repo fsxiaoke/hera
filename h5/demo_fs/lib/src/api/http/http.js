@@ -13,6 +13,7 @@ class Http {
   }
   request (params) {
     const _params = params
+    _params.url = this.changeUpEaUrl(_params.url) // 上游企业改变url
     if (isNeedApiPrefix(_params.url)) {
       _params.url = `${config.fsInfo.host}${_params.url}`
       _params.url = `${_params.url}/${config.systemInfo.platform}.${config
@@ -23,13 +24,29 @@ class Http {
     }
     _params.header = {
       'accept-language': this.getAcceptLang(),
-      cookie: config.fsInfo.cookie,
+      cookie: this.getCookie(),
       Accept: 'application/json',
       'Content-Type': 'application/json; charset=UTF-8',
       ...(_params.header || {})
     }
 
     wx.request(_params)
+  }
+
+  getCookie () {
+    var cookie = config.fsInfo.cookie
+    if (config.fsInfo.upEaInfo != null && config.fsInfo.upEaInfo.isUpEa) {
+      var upCookie = config.fsInfo.upEaInfo.cookie
+      cookie = cookie + upCookie
+    }
+    return cookie
+  }
+
+  changeUpEaUrl (url) {
+    if (config.fsInfo.upEaInfo != null && config.fsInfo.upEaInfo.isUpEa) {
+      return url.replace('/EM1', '/EM6')
+    }
+    return url
   }
 
   getAcceptLang () {
