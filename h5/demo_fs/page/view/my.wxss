@@ -1,0 +1,4 @@
+.flex-wrp2222 {
+  margin-top: 60rpx;
+  display: flex;
+}

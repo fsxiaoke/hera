@@ -23,13 +23,11 @@
 
   </script>
   <script>
-    setTimeout(function(){
       document.dispatchEvent(new CustomEvent("generateFuncReady", {
       detail: {
         generateFunc: $gwx('./{{= _.path}}.wxml')
       }
     }))
-    },3000)
     
   </script>
 </head>

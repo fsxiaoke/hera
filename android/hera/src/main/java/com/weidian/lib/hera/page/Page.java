@@ -250,6 +250,11 @@ public class Page extends LinearLayout implements IBridge,
     }
 
     @Override
+    public String invokeSync(String event, String params, String callbackId) {
+        return null;
+    }
+
+    @Override
     public void callback(String callbackId, String result) {
     }
 

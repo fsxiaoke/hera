@@ -23,7 +23,7 @@ public class HeraApplication extends Application {
                     .addExtendsApi(new ApiOpenPageForResult())
                     .setDebug(true)
                     .build();
-            HeraService.start(this.getApplicationContext(), config);
+            HeraService.start(this, config);
         }
     }
 }

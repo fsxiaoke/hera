@@ -681,7 +681,7 @@ var apiObj = {
   getSystemInfoSync: function (params) {
     var rt = {},
       platform = utils.getPlatform()
-    bridge.invokeMethod(
+    bridge.invokeMethodSync(
       'getSystemInfo',
       {},
       {

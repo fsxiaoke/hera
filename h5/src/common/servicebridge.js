@@ -15,7 +15,7 @@
       defaultEventHandlers = {},
       eventPrefix = 'custom_event_',
       handlers = {},
-            PROTOCAL = 'hera',
+      PROTOCAL = 'hera',
       IFRAME_PREFIX = 'hybridjsbrige_'
     if (hasDocument) {
       var userAgent = global.navigator.userAgent,
@@ -42,20 +42,24 @@
         return result
       }
     }
-    var postMessage = function (event, paramsString, callbackId) {
+    var postMessage = function (event, paramsString, callbackId, isSync) {
         // postMessage
         if (isIOS) {
-          global.webkit.messageHandlers.invokeHandler.postMessage({
-            C: event,
-            paramsString: paramsString,
-            callbackId: callbackId
-          })
+          isSync
+            ? global.webkit.messageHandlers.invokeHandler.postMessageSync({
+              C: event,
+              paramsString: paramsString,
+              callbackId: callbackId
+            })
+            : global.webkit.messageHandlers.invokeHandler.postMessage({
+              C: event,
+              paramsString: paramsString,
+              callbackId: callbackId
+            })
         } else {
-          var jsCoreHandleResult = HeraJSCore.invokeHandler(
-            event,
-            paramsString,
-            callbackId
-          )
+          var jsCoreHandleResult = isSync
+            ? HeraJSCore.invokeHandlerSync(event, paramsString, callbackId)
+            : HeraJSCore.invokeHandler(event, paramsString, callbackId)
           if (
             typeof jsCoreHandleResult !== 'undefined' &&
             typeof callbacks[callbackId] === 'function' &&
@@ -105,6 +109,14 @@
         // reportLog(event,params,'','invoke');
         callbacks[callbackId] = callback
         postMessage(event, paramsString, callbackId)
+      },
+      invokeSync = function (event, params, callback) {
+        // postMessage
+        var paramsString = JSON.stringify(params || {}),
+          callbackId = ++callbackIndex
+        // reportLog(event,params,'','invoke');
+        callbacks[callbackId] = callback
+        postMessage(event, paramsString, callbackId, true)
       },
       invokeCallbackHandler = function (callbackId, params) {
         var callback = callbacks[callbackId]
@@ -161,6 +173,7 @@
       }
     global.ServiceJSBridge = {
       invoke: invoke,
+      invokeSync: invokeSync,
       invokeCallbackHandler: invokeCallbackHandler,
       oldCallbackHandler: oldCallbackHandler,
       publishCallbackHandler: publishCallbackHandler,
