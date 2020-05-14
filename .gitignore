@@ -14,3 +14,5 @@ android/.settings/org.eclipse.buildship.core.prefs
 android/hera/.classpath
 android/sample/.classpath
 android/sample/.settings/org.eclipse.buildship.core.prefs
+ios/HeraDemo/demo_fs.zip
+android/sample/src/main/assets/demo_fs.zip

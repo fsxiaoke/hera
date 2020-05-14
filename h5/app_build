@@ -3,7 +3,7 @@
 echo "=> build $1"
 rm   -rf ./dist/$1
 node ./bin/weweb $1 -d dist/$1
-cp -R  "./dist/$1/app.zip" "../ios/HeraDemo/$1.zip"  
-cp -R "./dist/$1/app.zip" "../android/sample/src/main/assets/$1.zip" 
+cp -R  "./dist/$1.zip" "../ios/HeraDemo/$1.zip"  
+cp -R "./dist/$1.zip" "../android/sample/src/main/assets/$1.zip" 
 adb shell mkdir -p  "sdcard/facishare/hera"
-adb push "./dist/$1/app.zip" "sdcard/facishare/hera/$1.zip"
+adb push "./dist/$1.zip" "sdcard/facishare/hera/$1.zip"
