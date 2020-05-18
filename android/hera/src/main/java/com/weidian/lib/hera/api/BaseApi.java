@@ -47,4 +47,8 @@ public abstract class BaseApi extends AbsApi {
         return mContext;
     }
 
+    public void setContext(Context context){
+        mContext = context;
+    }
+
 }

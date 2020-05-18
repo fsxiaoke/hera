@@ -65,14 +65,14 @@ public class GlobalPageManager {
                 if(mIsMiniMode){
                     mActivityStack.remove(activity);
                     if(activity instanceof HeraActivity){
-                        mIsMiniMode = dealMiniMode();
+                        mIsMiniMode = dealHeraMode();
                     }
                 }
             }
         });
     }
 
-    private boolean dealMiniMode(){
+    private boolean dealHeraMode(){
         for(Activity a: mActivityStack){
             if(a instanceof  HeraActivity){
                 return true;
@@ -92,6 +92,38 @@ public class GlobalPageManager {
             return true;
         }
         return false;
+    }
+
+
+    /**
+     * 获取同一个小程序的上个页面
+     * @param appId
+     * @return
+     */
+    public HeraActivity getTopHeraActivity(String appId){
+        int len = mActivityStack.size();
+        for(int i=len-1; i>=0;i--){
+            Activity a = mActivityStack.get(i);
+            if(a instanceof  HeraActivity){
+                HeraActivity heraActivity = (HeraActivity) a;
+                if(heraActivity.getAppId().equals(appId)){
+                    return heraActivity;
+                }
+            }
+        }
+        return null;
+    }
+
+    public HeraActivity getTopHeraActivity(){
+        int len = mActivityStack.size();
+        for(int i=len-1; i>=0;i--){
+            Activity a = mActivityStack.get(i);
+            if(a instanceof  HeraActivity){
+                HeraActivity heraActivity = (HeraActivity) a;
+                return heraActivity;
+            }
+        }
+        return null;
     }
 
 

@@ -54,6 +54,24 @@ public class AppService extends LinearLayout implements IBridge {
     private ServiceWebView mServiceWebView;
     private AppConfig mAppConfig;
     private ApisManager mApisManager;
+    private boolean mReady;
+
+
+    public boolean isReady(){
+        return mReady;
+    }
+
+    public AppConfig getAppConfig(){
+        return mAppConfig;
+    }
+
+    public ApisManager getApisManager(){
+        return mApisManager;
+    }
+
+    public void setEventListener(OnEventListener eventListener){
+        mEventListener = eventListener;
+    }
 
 
     public AppService(Context context, OnEventListener listener,
@@ -131,6 +149,7 @@ public class AppService extends LinearLayout implements IBridge {
         if (mEventListener != null) {
             mEventListener.onServiceReady();
         }
+        mReady = true;
     }
 
     /**

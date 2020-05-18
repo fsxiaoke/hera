@@ -91,7 +91,8 @@ public class HeraAppManager {
             String appPath = params[1];
             String outputPath = StorageUtil.getMiniAppSourceDir(mContext, appId).getAbsolutePath();
             File serviceFile = new File(outputPath, "service.html");
-            boolean unzipResult = serviceFile.exists();
+//            boolean unzipResult = serviceFile.exists();
+            boolean unzipResult = false;
             if(!unzipResult) {
                 if (!TextUtils.isEmpty(appPath)) {
                     unzipResult = ZipUtil.unzipFile(appPath, outputPath);

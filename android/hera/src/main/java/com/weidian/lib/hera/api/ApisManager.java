@@ -66,6 +66,8 @@ import com.weidian.lib.hera.interfaces.IApiSync;
 import com.weidian.lib.hera.interfaces.IBridge;
 import com.weidian.lib.hera.interfaces.ICallback;
 import com.weidian.lib.hera.interfaces.OnEventListener;
+import com.weidian.lib.hera.main.GlobalPageManager;
+import com.weidian.lib.hera.main.HeraActivity;
 import com.weidian.lib.hera.main.HeraService;
 import com.weidian.lib.hera.model.Event;
 import com.weidian.lib.hera.remote.RemoteService;
@@ -100,11 +102,20 @@ public class ApisManager implements ServiceConnection {
     private final Map<Event, Pair<IApi, ICallback>> CALLING_APIS = new HashMap<>();
 
     private Activity mActivity;
+    private Activity mBindActivity;
     private Messenger mSender;//发送请求的Messenger
     private Messenger mReceiver;//接收请求结果的Messenger
 
     public static  void registerExtendsApi(Class<? extends BaseApi> apiClass){
         extendsApiClass.put(apiClass.getName(),apiClass);
+    }
+
+    public void setActivity(Activity activity){
+        mActivity = activity;
+    }
+
+    public Activity getBindActivity(){
+        return mBindActivity;
     }
 
     //处理请求的结果
@@ -164,6 +175,7 @@ public class ApisManager implements ServiceConnection {
     public ApisManager(Activity activity, OnEventListener listener, AppConfig appConfig) {
         HeraTrace.d(TAG, "HostApiManager create");
         mActivity = activity;
+        mBindActivity = activity;
         mReceiver = new Messenger(mHandler);
         Intent intent = new Intent(mActivity, RemoteService.class);
         mActivity.bindService(intent, this, Context.BIND_AUTO_CREATE);
@@ -196,17 +208,26 @@ public class ApisManager implements ServiceConnection {
     /**
      * 当{@link Activity#onDestroy()}调用时调用
      */
-    public void onDestroy() {
-        for (Map.Entry<String, IApi> entry : APIS.entrySet()) {
-            IApi api = entry.getValue();
-            if (api != null) {
-                api.onDestroy();
+    public boolean onDestroy() {
+        if(mBindActivity == mActivity&&mActivity.isFinishing()) {
+            for (Map.Entry<String, IApi> entry : APIS.entrySet()) {
+                IApi api = entry.getValue();
+                if (api != null) {
+                    api.onDestroy();
+                }
             }
+            APIS.clear();
+            CALLING_APIS.clear();
+            mHandler.removeCallbacksAndMessages(null);
+            try{
+                mActivity.unbindService(this);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            return true;
         }
-        APIS.clear();
-        CALLING_APIS.clear();
-        mHandler.removeCallbacksAndMessages(null);
-        mActivity.unbindService(this);
+        return false;
     }
 
     /**
@@ -257,6 +278,7 @@ public class ApisManager implements ServiceConnection {
         IApi api = APIS.get(event.getName());
         String ret="";
         if (api != null) {
+            ((BaseApi)api).setContext(mActivity);
             CALLING_APIS.put(event, Pair.create(api, callback));
             ret = ((IApiSync)api).invokeSync(event.getName(), event.getParam(), callback);
         }
@@ -272,6 +294,9 @@ public class ApisManager implements ServiceConnection {
         ICallback callback = new ApiCallback(event, bridge);
         IApi api = APIS.get(event.getName());
         if (api != null) {
+
+            ((BaseApi)api).setContext(mActivity);
+
             CALLING_APIS.put(event, Pair.create(api, callback));
             api.invoke(event.getName(), event.getParam(), callback);
             return;

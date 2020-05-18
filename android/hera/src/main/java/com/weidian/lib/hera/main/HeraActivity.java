@@ -41,6 +41,7 @@ import com.weidian.lib.hera.api.ApisManager;
 import com.weidian.lib.hera.config.AppConfig;
 import com.weidian.lib.hera.interfaces.OnEventListener;
 import com.weidian.lib.hera.service.AppService;
+import com.weidian.lib.hera.service.AppServiceManager;
 import com.weidian.lib.hera.sync.HeraAppManager;
 import com.weidian.lib.hera.trace.HeraTrace;
 import com.weidian.lib.hera.utils.JsonUtil;
@@ -70,7 +71,20 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
 
     private LoadingIndicator mLoadingIndicator;
 
-    String mAppUrl;
+    private String mAppUrl;
+    private String appId;
+
+    public String getAppId(){
+        return appId;
+    }
+
+    public String getAppUrl(){
+        return mAppUrl;
+    }
+
+    public PageManager getPageManager(){
+        return mPageManager;
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +95,7 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
 
         //1. 获取并校验参数
         Intent intent = getIntent();
-        String appId = intent.getStringExtra(APP_ID);
+        appId = intent.getStringExtra(APP_ID);
         String userId = intent.getStringExtra(USER_ID);
         String appPath = intent.getStringExtra(APP_PATH);
         mAppUrl = intent.getStringExtra(APP_URL);
@@ -96,32 +110,51 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         HeraTrace.d(TAG, String.format("MiniApp[%s] open", appId));
 
         //2. 创建AppConfig，将appId和userId缓存，在整个小程序运行期内有效
-        mAppConfig = new AppConfig(appId, userId);
+//        mAppConfig = new AppConfig(appId, userId);
+//
+//        //3. 创建ApiManager，管理Api的调用
+//        mApisManager = new ApisManager(this, this, mAppConfig);
+//        mApisManager.onCreate();
 
-        //3. 创建ApiManager，管理Api的调用
-        mApisManager = new ApisManager(this, this, mAppConfig);
-        mApisManager.onCreate();
+        initAppService(appId,userId);
 
         //4. 初始化视图
         setContentView(R.layout.hera_main_activity);
         mContainer = (FrameLayout) findViewById(R.id.container);
 
-        //5. 初始化并同步小程序信息
         mLoadingIndicator = (LoadingIndicator) findViewById(R.id.loading_indicator);
         mLoadingIndicator.setTitle(getString(R.string.app_name));
-        mLoadingIndicator.show();
-        HeraAppManager.syncMiniApp(this, appId, appPath, new HeraAppManager.SyncCallback() {
-            @Override
-            public void onResult(boolean result) {
-                if (!result || !StorageUtil.isFrameworkExists(getApplicationContext())) {
-                    mLoadingIndicator.hide();
-                    finish();
-                } else {
-                    loadPage(mContainer);
-                }
-            }
-        });
 
+        if(mAppService.isReady()){
+            loadPage(mContainer);
+            onServiceReady();
+        }else{
+            //5. 初始化并同步小程序信息
+
+            mLoadingIndicator.show();
+            HeraAppManager.syncMiniApp(this, appId, appPath, new HeraAppManager.SyncCallback() {
+                @Override
+                public void onResult(boolean result) {
+                    if (!result || !StorageUtil.isFrameworkExists(getApplicationContext())) {
+                        mLoadingIndicator.hide();
+                        finish();
+                    } else {
+                        loadPage(mContainer);
+                    }
+                }
+            });
+        }
+
+
+    }
+
+    private void initAppService(String appId,String userId){
+        mAppService = AppServiceManager.getAppService(appId);
+        if(mAppService == null){
+            mAppService = AppServiceManager.createAppService(this,appId,userId);
+        }
+        mAppConfig = mAppService.getAppConfig();
+        mApisManager = mAppService.getApisManager();
     }
 
     /**
@@ -130,9 +163,11 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
      * @param container
      */
     private void loadPage(FrameLayout container) {
-        mAppService = new AppService(this, this, mAppConfig, mApisManager);
-        container.addView(mAppService, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+//        mAppService = new AppService(this, this, mAppConfig, mApisManager);
+        if(mAppService.getParent() == null){
+            container.addView(mAppService, new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
+        }
         mPageManager = new PageManager(this, mAppConfig);
         container.addView(mPageManager.getContainer(), new FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT));
@@ -149,6 +184,8 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
         super.onStart();
         if (mAppService != null && mPageManager != null) {
             mAppService.subscribeHandler("onAppEnterForeground", "{}", mPageManager.getTopPageId());
+            mAppService.setEventListener(this);
+            mApisManager.setActivity(this);
         }
     }
 
@@ -179,7 +216,9 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
     @Override
     protected void onDestroy() {
         HeraTrace.d(TAG, String.format("MiniApp[%s] close", mAppConfig.getAppId()));
-        mApisManager.onDestroy();
+        if(mApisManager.onDestroy()){
+            AppServiceManager.removeAppService(appId);
+        }
         StorageUtil.clearMiniAppTempDir(this, mAppConfig.getAppId());
 
         super.onDestroy();
@@ -189,11 +228,10 @@ public class HeraActivity extends AppCompatActivity implements OnEventListener {
     public void onServiceReady() {
         HeraTrace.d(TAG, "onServiceReady()");
         mLoadingIndicator.hide();
-        if(TextUtils.isEmpty(mAppUrl)){
-            mPageManager.launchHomePage(mAppConfig.getRootPath(), this);
-        }else{
-            mPageManager.launchHomePage(mAppUrl,this);
+        if(TextUtils.isEmpty(mAppUrl)) {
+            mAppUrl = mAppConfig.getRootPath();
         }
+        mPageManager.launchHomePage(mAppUrl,this);
 
     }
 

@@ -418,13 +418,25 @@ public class PageManager {
 //            return false;
 //        }
 //
+
+        if(!GlobalPageManager.getInstance().navigateBackPage(delta)){
+                        HeraTrace.d(TAG, String.format("navigateBackPage failed, delta must be in [1, %s]",
+                    getPageCount() - 1));
+            return false;
+        }
+        HeraActivity currActivity = GlobalPageManager.getInstance().getTopHeraActivity(); // back时找到上个小程序页面的Page调用back,js层会改变currUrl
+        if(currActivity != null){
+            Page page =currActivity.getPageManager().getTopPage();
+            if (page != null) {
+                page.onNavigateBack();
+            }
+        }
 //        Page page = getTopPage();
 //        if (page != null) {
 //            page.onNavigateBack();
 //        }
-//        return true;
+        return true;
 
-        return GlobalPageManager.getInstance().navigateBackPage(delta);
     }
 
     /**
