@@ -4,6 +4,7 @@
     <text>hello fone</text>
     <view><text>{{text}}</text></view>
     <mytag> </mytag>
+    <button bindtap="onHttp" >onHttp</button>
     <button bindtap="navigateBack1" >back1</button>
     <button bindtap="navigateBack2" >back2</button>
     

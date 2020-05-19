@@ -39,7 +39,7 @@ Page({
   },
   navigateBack2: function (event) {
     wx.navigateBack({ delta: 2 })
-    api.page.setPageData({ xxx: 'vvvvvvvvvvvvvv' })
+    api.page.firePageEvent('event1', { xxx: 'hello world3' })
   },
   data: {
     text: 'This is page data.'

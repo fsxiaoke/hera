@@ -1,3 +1,3 @@
-import page from './page'
+import page from './fs/page'
 
 export default page

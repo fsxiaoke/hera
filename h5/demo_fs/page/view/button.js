@@ -13,10 +13,10 @@ Page({
   },
 
   onLoad: function (options) {
-    api.page.onAppGetPageData(this.onAppGetPageData)
+    api.page.addPageEvent('event1', this.onAppGetPageEvent)
   },
 
-  onAppGetPageData: function (params) {
+  onAppGetPageEvent: function (params) {
     wx.showToast({
       title: JSON.stringify(params)
     })

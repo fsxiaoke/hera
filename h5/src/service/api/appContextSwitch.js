@@ -24,11 +24,11 @@ pubsub.onMethod('onAppRunningStatusChange', function () {
 })
 
 pubsub.onMethod(
-  'onAppGetPageData', // 用于页面间传递数据
+  'onAppGetPageEvent', // 用于页面间传递数据
   function () {
     var params =
       arguments.length > 0 && void 0 !== arguments[0] ? arguments[0] : {}
-    eventEmitter.emit('onAppGetPageData', params)
+    eventEmitter.emit('onAppGetPageEvent', params)
   }
 )
 
@@ -62,8 +62,8 @@ var onAppRunningStatusChange = function (fn) {
   })
 }
 
-var onAppGetPageData = function (fn) {
-  eventEmitter.on('onAppGetPageData', function (params) {
+var onAppGetPageEvent = function (fn) {
+  eventEmitter.on('onAppGetPageEvent', function (params) {
     typeof fn === 'function' && fn(params)
   })
 }
@@ -72,5 +72,5 @@ export default {
   onAppEnterForeground: onAppEnterForeground,
   onAppEnterBackground: onAppEnterBackground,
   onAppRunningStatusChange: onAppRunningStatusChange,
-  onAppGetPageData: onAppGetPageData
+  onAppGetPageEvent: onAppGetPageEvent
 }

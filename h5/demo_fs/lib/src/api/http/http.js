@@ -35,7 +35,7 @@ class Http {
 
   getCookie () {
     var cookie = config.fsInfo.cookie
-    if (config.fsInfo.upEaInfo != null && config.fsInfo.upEaInfo.isUpEa) {
+    if (config.fsInfo.upEaInfo && config.fsInfo.upEaInfo.isUpEa) {
       var upCookie = config.fsInfo.upEaInfo.cookie
       cookie = cookie + upCookie
     }
@@ -43,7 +43,7 @@ class Http {
   }
 
   changeUpEaUrl (url) {
-    if (config.fsInfo.upEaInfo != null && config.fsInfo.upEaInfo.isUpEa) {
+    if (config.fsInfo.upEaInfo && config.fsInfo.upEaInfo.isUpEa) {
       return url.replace('/EM1', '/EM6')
     }
     return url

@@ -1018,12 +1018,12 @@ var apiObj = {
   onAppRunningStatusChange: function (params) {
     appContextSwitch.onAppRunningStatusChange.call(apiObj, params)
   },
-  onAppGetPageData: function (params) {
+  onAppGetPageEvent: function (params) {
     // 用于页面间传递数据
-    appContextSwitch.onAppGetPageData.call(apiObj, params)
+    appContextSwitch.onAppGetPageEvent.call(apiObj, params)
   },
-  setPageData: function (params) {
-    bridge.invokeMethod('setPageData', params)
+  firePageEvent: function (params) {
+    bridge.invokeMethod('firePageEvent', params)
   },
 
   setAppData: function (data) {

@@ -9,7 +9,7 @@ import java.util.Stack;
 public class GlobalPageManager {
 
     private static GlobalPageManager instance = new GlobalPageManager();
-    private boolean mIsMiniMode; //是否进入首个小程序
+    private boolean mInHera; //是否进入首个小程序
     private Stack<Activity> mActivityStack = new Stack<>();
 
     private static byte[] locker = new byte[0];
@@ -25,12 +25,12 @@ public class GlobalPageManager {
         context.registerActivityLifecycleCallbacks(new Application.ActivityLifecycleCallbacks() {
             @Override
             public void onActivityCreated(Activity activity, Bundle bundle) {
-                if(!mIsMiniMode){
+                if(!mInHera){
                     if(activity instanceof HeraActivity){
-                        mIsMiniMode = true;
+                        mInHera = true;
                     }
                 }
-                if(mIsMiniMode){
+                if(mInHera){
                     mActivityStack.push(activity);
                 }
             }
@@ -62,17 +62,17 @@ public class GlobalPageManager {
 
             @Override
             public void onActivityDestroyed(Activity activity) {
-                if(mIsMiniMode){
+                if(mInHera){
                     mActivityStack.remove(activity);
                     if(activity instanceof HeraActivity){
-                        mIsMiniMode = dealHeraMode();
+                        mInHera = isInHera();
                     }
                 }
             }
         });
     }
 
-    private boolean dealHeraMode(){
+    private boolean isInHera(){
         for(Activity a: mActivityStack){
             if(a instanceof  HeraActivity){
                 return true;
@@ -81,6 +81,11 @@ public class GlobalPageManager {
         return false;
     }
 
+    /**
+     * 向前回退页面
+     * @param delta 回退几个页面
+     * @return
+     */
     public boolean navigateBackPage(int delta){
         if(mActivityStack.size()>=delta){
             for(int i =0; i < delta; i++){
